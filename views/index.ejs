@@ -1,89 +1,96 @@
 <%- include('partials/header', { titulo: 'Un Rayito de Sol' }) %>
 
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
+<main class="flex-grow-1">
 
-    <div class="hero-section text-center shadow-sm">
+    <div class="container mt-5">
 
-        <h1 class="display-5">
-            Consultorio Psicológico Infantil
-        </h1>
+        <div class="hero-section text-center shadow-sm animate__animated animate__fadeInLeft">
 
-        <h2 class="text-primary">
-            Un Rayito de Sol
-        </h2>
+            <h1 class="display-5">
+                Consultorio Psicológico Infantil
+            </h1>
 
-        <p class="lead mt-3">
-            Brindamos apoyo emocional y psicológico
-            para niñas, niños y sus familias mediante
-            atención profesional y personalizada.
-        </p>
+            <h2 class="text-primary">
+                Un Rayito de Sol
+            </h2>
+
+            <p class="lead mt-3">
+                Brindamos apoyo emocional y psicológico
+                para niñas, niños y sus familias mediante
+                atención profesional y personalizada.
+            </p>
+
+        </div>
+
+        <div class="row mt-5">
+
+            <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+
+                <div class="card shadow-sm h-100 evento-cards">
+
+                    <div class="card-body">
+
+                        <h4>Terapia Infantil</h4>
+                        <p>
+                            Atención psicológica enfocada
+                            en el bienestar emocional
+                            de niñas y niños.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+
+                <div class="card shadow-sm h-100 evento-cards">
+
+                    <div class="card-body">
+
+                        <h4>Orientación Familiar</h4>
+                        <p>
+                            Apoyo y asesoría para madres,
+                            padres y tutores.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+
+                <div class="card shadow-sm h-100 evento-cards">
+
+                    <div class="card-body">
+
+                        <h4>Evaluaciones</h4>
+                        <p>
+                            Evaluaciones psicológicas
+                            adaptadas a cada caso.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="row mt-5">
+</main>
 
-        <div class="col-md-4 mb-4">
-
-            <div class="card card-hover shadow-sm h-100 ">
-
-                <div class="card-body">
-
-                    <h4>Terapia Infantil</h4>
-
-                    <p>
-                        Atención psicológica enfocada
-                        en el bienestar emocional
-                        de niñas y niños.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4 mb-4">
-
-            <div class="card card-hover shadow-sm h-100 ">
-
-                <div class="card-body">
-
-                    <h4>Orientación Familiar</h4>
-
-                    <p>
-                        Apoyo y asesoría para madres,
-                        padres y tutores.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4 mb-4">
-
-            <div class="card card-hover shadow-sm h-100 ">
-
-                <div class="card-body">
-
-                    <h4>Evaluaciones</h4>
-
-                    <p>
-                        Evaluaciones psicológicas
-                        adaptadas a cada caso.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 <%- include('partials/alerts') %>
 <%- include('partials/footer') %>
+
+</body>
+</html>

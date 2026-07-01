@@ -1,22 +1,33 @@
 <%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
+<main class="flex-grow-1">
 
-    <div class="card shadow-sm p-4 ">
+    <div class="container mt-5">
 
-        <h1 class="text-primary">Contacto</h1>
+        <div class="card shadow-sm p-4">
 
-        <p><strong>Dirección:</strong> Saltillo, Coahuila.</p>
+            <h1 class="text-primary">Contacto</h1>
 
-        <p><strong>Teléfono:</strong> (844) 123-4567</p>
+            <p><strong>Dirección:</strong> Saltillo, Coahuila.</p>
 
-        <p><strong>Correo:</strong> contacto@rayitodesol.com</p>
+            <p><strong>Teléfono:</strong> (844) 123-4567</p>
 
-        <p><strong>Horario:</strong> Lunes a Viernes de 9:00 a 18:00 hrs.</p>
+            <p><strong>Correo:</strong> contacto@rayitodesol.com</p>
+
+            <p><strong>Horario:</strong> Lunes a Viernes de 9:00 a 18:00 hrs.</p>
+
+        </div>
 
     </div>
 
-</div>
+</main>
 
+<%- include('partials/alerts') %>
 <%- include('partials/footer') %>
+
+</body>
+</html>

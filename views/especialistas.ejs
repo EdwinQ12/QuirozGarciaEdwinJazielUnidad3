@@ -1,20 +1,31 @@
 <%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
+<main class="flex-grow-1">
 
-    <h1 class="text-primary mb-4">Especialistas</h1>
+    <div class="container mt-5">
 
-    <div class="card shadow-sm p-4 mb-3 ">
-        <h4>Dra. Ana Martínez</h4>
-        <p>Especialista en Psicología Infantil.</p>
+        <h1 class="text-primary mb-4">Especialistas</h1>
+
+        <div class="card shadow-sm p-4 mb-3">
+            <h4>Dra. Ana Martínez</h4>
+            <p>Especialista en Psicología Infantil.</p>
+        </div>
+
+        <div class="card shadow-sm p-4">
+            <h4>Dr. Carlos Hernández</h4>
+            <p>Especialista en Orientación Familiar.</p>
+        </div>
+
     </div>
 
-    <div class="card shadow-sm p-4 ">
-        <h4>Dr. Carlos Hernández</h4>
-        <p>Especialista en Orientación Familiar.</p>
-    </div>
+</main>
 
-</div>
-
+<%- include('partials/alerts') %>
 <%- include('partials/footer') %>
+
+</body>
+</html>

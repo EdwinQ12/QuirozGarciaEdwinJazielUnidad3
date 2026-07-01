@@ -17,3 +17,165 @@
   background-color: #17a2b8 !important; /* azul info */
   color: white !important;
 }
+
+h1, h2, h3 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+}
+
+p, a, span {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;
+}
+
+/*estilos navbar*/
+
+.navbar {
+    background: linear-gradient(135deg, #4facfe, #00f2fe) !important;
+    padding: 14px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1040;
+}
+
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 22px;
+    color: white !important;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: #fff700 !important;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: 500;
+    margin: 0 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff700 !important;
+    transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: #fff700;
+    transition: 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+form.d-flex .form-control {
+    border-radius: 20px;
+    border: none;
+    padding: 8px 12px;
+}
+
+form.d-flex .form-control:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    outline: none;
+}
+
+.navbar .d-flex {
+    align-items: center;
+}
+
+
+.btn-nav_r_i {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    border-radius: 18px !important;
+    line-height: 1 !important;
+    height: auto !important;
+    white-space: nowrap;
+}
+
+form.d-flex .btn {
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+form.d-flex .btn:hover {
+    transform: scale(1.05);
+}
+
+.navbar .btn {
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+@media (max-width: 991px) {
+    .navbar-nav {
+        margin-top: 10px;
+    }
+
+    .navbar .btn {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/*Estilos Cards*/
+
+.card.evento-cards {
+  transition: all 0.3s ease;
+}
+
+.card.evento-cards:hover {
+  transform: translateY(-12px) scale(1.02);
+}
+
+/*Animaciones*/
+
+.hero-section {
+  transition: transform 5.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+              box-shadow 2.6s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.hero-section:hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 18px 35px rgba(0,0,0,0.25) !important;
+ 
+}
+
+main {
+  flex: 1; /* ocupa el espacio disponible */
+}
+
+footer {
+  margin-top: auto;       /* empuja el footer al fondo */
+  background: linear-gradient(to right, #000000, #434343); /* degradado */
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 1050; /* nivel Bootstrap navbar */
+}

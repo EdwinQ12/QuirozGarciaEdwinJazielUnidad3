@@ -1,69 +1,77 @@
 <%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
+<main class="flex-grow-1">
 
-    <div class="card shadow-sm p-4 ">
+    <div class="container mt-5">
 
-        <h1 class="text-primary mb-4">
-            Comentarios de pacientes
-        </h1>
+        <div class="card shadow-sm p-4">
 
-        <form action="/chat" method="POST">
+            <h1 class="text-primary mb-4">
+                Comentarios de pacientes
+            </h1>
 
-            <div class="input-group mb-4">
+            <form action="/chat" method="POST">
 
-                <input
-                    type="text"
-                    name="mensaje"
-                    class="form-control"
-                    placeholder="Escribe un mensaje..."
-                    required>
+                <div class="input-group mb-4">
 
-                <button
-                    class="btn btn-primary"
-                    type="submit">
-                    Enviar
-                </button>
+                    <input
+                        type="text"
+                        name="mensaje"
+                        class="form-control"
+                        placeholder="Escribe un mensaje..."
+                        required>
 
-            </div>
-
-        </form>
-
-        <hr>
-
-        <% mensajes.forEach(mensaje => { %>
-
-            <div class="card mb-3">
-
-                <div class="card-body">
-
-                    <strong>
-                        <%= mensaje.usuario %>
-                    </strong>
-
-                    <br>
-
-                    <%= mensaje.mensaje %>
-
-                    <br>
-
-                    <small class="text-muted">
-
-                        <%= new Date(mensaje.fecha)
-                        .toLocaleString() %>
-
-                    </small>
+                    <button
+                        class="btn btn-primary"
+                        type="submit">
+                        Enviar
+                    </button>
 
                 </div>
 
-            </div>
+            </form>
 
-        <% }) %>
+            <hr>
+
+            <% mensajes.forEach(mensaje => { %>
+
+                <div class="card mb-3">
+
+                    <div class="card-body">
+
+                        <strong>
+                            <%= mensaje.usuario %>
+                        </strong>
+
+                        <br>
+
+                        <%= mensaje.mensaje %>
+
+                        <br>
+
+                        <small class="text-muted">
+                            <%= new Date(mensaje.fecha).toLocaleString() %>
+                        </small>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
 
     </div>
 
-</div>
+</main>
 
 <%- include('partials/alerts') %>
+
 <%- include('partials/footer') %>
+
+</body>
+</html>
