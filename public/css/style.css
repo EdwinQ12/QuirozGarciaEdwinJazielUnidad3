@@ -164,11 +164,11 @@ form.d-flex .btn:hover {
 }
 
 main {
-  flex: 1; /* ocupa el espacio disponible */
+  flex: 1; 
 }
 
 footer {
-  margin-top: auto;       /* empuja el footer al fondo */
+  margin-top: auto;       
   background: linear-gradient(to right, #000000, #434343); /* degradado */
   color: white;
   text-align: center;
@@ -177,5 +177,5 @@ footer {
 
 .dropdown-menu {
   position: absolute;
-  z-index: 1050; /* nivel Bootstrap navbar */
+  z-index: 1050; 
 }
