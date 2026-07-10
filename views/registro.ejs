@@ -1,11 +1,17 @@
-<%- include('partials/header', { titulo: 'registro' }) %>
+<%- include('partials/header', { titulo: 'Registro' }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-    <div class="container mt-5">
+<main class="flex-grow-1">
 
-        <div class="card p-4 shadow-sm ">
+    <div class="container mt-5 animate__animated animate__fadeInLeft">
+
+        <div class="card p-4 shadow-sm evento-cards">
 
             <h2 class="text-success mb-4">Registro</h2>
+
             <form action="/registro" method="POST">
 
                 <div class="mb-3">
@@ -40,11 +46,13 @@
                     <div class="g-recaptcha" data-sitekey="<%= siteKey %>"></div>
                 </div>
 
-                <button
-                    type="submit" class="btn btn-success">Registrar Usuario
+                <button type="submit" class="btn btn-success">
+                    Registrar Usuario
                 </button>
 
-                <a href="/"class="btn btn-secondary">Volver</a>
+                <a href="/" class="btn btn-secondary">
+                    Volver
+                </a>
 
             </form>
 
@@ -52,9 +60,13 @@
 
     </div>
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
+</main>
 
 <%- include('partials/alerts') %>
 
 <%- include('partials/footer') %>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</body>
+</html>

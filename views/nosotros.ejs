@@ -1,35 +1,46 @@
 <%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
+<main class="flex-grow-1">
 
-    <div class="card shadow-sm p-4 ">
+    <div class="container mt-5 animate__animated animate__fadeInLeft">
 
-        <h1 class="text-primary">Nosotros</h1>
+        <div class="card shadow-sm p-4 evento-cards">
 
-        <p>
-            El Consultorio Psicológico Infantil "Un Rayito de Sol"
-            tiene como objetivo brindar apoyo emocional y psicológico
-            a niñas, niños y sus familias en un ambiente seguro,
-            respetuoso y profesional.
-        </p>
+            <h1 class="text-primary">Nosotros</h1>
 
-        <h3>Misión</h3>
+            <p>
+                El Consultorio Psicológico Infantil "Un Rayito de Sol"
+                tiene como objetivo brindar apoyo emocional y psicológico
+                a niñas, niños y sus familias en un ambiente seguro,
+                respetuoso y profesional.
+            </p>
 
-        <p>
-            Contribuir al bienestar emocional infantil mediante
-            atención psicológica profesional y orientación familiar.
-        </p>
+            <h3>Misión</h3>
 
-        <h3>Visión</h3>
+            <p>
+                Contribuir al bienestar emocional infantil mediante
+                atención psicológica profesional y orientación familiar.
+            </p>
 
-        <p>
-            Ser un espacio reconocido por promover el desarrollo
-            emocional saludable de la niñez.
-        </p>
+            <h3>Visión</h3>
+
+            <p>
+                Ser un espacio reconocido por promover el desarrollo
+                emocional saludable de la niñez.
+            </p>
+
+        </div>
 
     </div>
 
-</div>
+</main>
 
+<%- include('partials/alerts') %>
 <%- include('partials/footer') %>
+
+</body>
+</html>
