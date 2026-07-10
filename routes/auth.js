@@ -31,9 +31,12 @@ const password = req.body.password;
         const acceso = await bcrypt.compare(password,usuario.password);
 
         if (acceso) {
+
             req.session.usuario = usuario.correo;
             req.session.nombre = usuario.nombre;
             req.session.correo = usuario.correo;
+            req.session.rol = usuario.rol;
+
             req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
             res.redirect('/dashboard');
         } else {
@@ -102,8 +105,8 @@ router.post('/registro', async (req, res) => {
         console.log('Hash bcrypt:', hash);
 
         await conexion.query(
-            `INSERT INTO usuarios (nombre, correo, password) VALUES ($1, $2, $3)`,
-            [usuario.nombre, usuario.correo, hash]
+            `INSERT INTO usuarios (nombre, correo, password, rol) VALUES ($1, $2, $3, $4)`,
+            [usuario.nombre, usuario.correo, hash, 'paciente']
         );
         req.session.mensaje = { tipo: 'success', texto: 'Registro exitoso, bienvenido ' + usuario.nombre };
         res.redirect('/login');

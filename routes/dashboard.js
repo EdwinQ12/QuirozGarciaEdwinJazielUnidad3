@@ -6,10 +6,27 @@ const Mensaje = require('../models/Mensaje');
 const Chat = require('../models/Chat');
 
 router.get('/dashboard', protegerRuta, (req, res) => {
-    
-    res.render('dashboard', {
+    const rol = req.session.rol;
+    if (rol === 'administrador') {
+        return res.render('admin/dashboard',{
+            nombre: req.session.nombre,
+            correo: req.session.correo,
+            rol: req.session.rol
+        });
+    }
+
+    if (rol === 'medico') {
+        return res.render('medico/dashboard',{
+            nombre: req.session.nombre,
+            correo: req.session.correo,
+            rol: req.session.rol
+        });
+    }
+
+    return res.render('dashboard', {
         nombre: req.session.nombre,
         correo: req.session.correo,
+        rol: req.session.rol
     });
 });
 
