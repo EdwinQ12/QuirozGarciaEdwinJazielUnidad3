@@ -23,7 +23,7 @@ const password = req.body.password;
         );
 
         if (resultado.rows.length === 0) {
-            req.session.mensaje = { tipo: 'error', texto: 'Usuario no encontrado' };
+            req.session.mensaje = { tipo: 'error', texto: 'Usuario o contraseña incorrectos' };
             return res.redirect('/login');
         }
 
@@ -31,17 +31,14 @@ const password = req.body.password;
         const acceso = await bcrypt.compare(password,usuario.password);
 
         if (acceso) {
-
             req.session.usuario = usuario.correo;
             req.session.nombre = usuario.nombre;
             req.session.correo = usuario.correo;
-            req.session.rol = usuario.rol;
-
             req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
             res.redirect('/dashboard');
         } else {
-            req.session.mensaje = { tipo: 'error', texto: 'Contraseña incorrecta' };
-            res.redirect('/login');
+            req.session.mensaje = { tipo: 'error', texto: 'Contraseña o correo incorrectos' };
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log(error);
@@ -111,7 +108,7 @@ router.post('/registro', async (req, res) => {
         req.session.mensaje = { tipo: 'success', texto: 'Registro exitoso, bienvenido ' + usuario.nombre };
         res.redirect('/login');
     } catch (error) {
-        console.log(error);
+        console.log('Error al registrar el Usuario', error);
         if (error && error.code === '23505') {
             req.session.mensaje = { tipo: 'error', texto: 'El correo ya está registrado' };
             return res.redirect('/registro');

@@ -179,3 +179,77 @@ footer {
   position: absolute;
   z-index: 1050; 
 }
+
+/* ===========================
+   MODO OSCURO
+=========================== */
+
+body.dark-mode{
+
+    background:#121212 !important;
+    color:white;
+
+}
+body.dark-mode .navbar{
+
+    background:#1f1f1f !important;
+
+}
+body.dark-mode footer{
+
+    background:#111 !important;
+    color:white;
+
+}
+body.dark-mode .card{
+
+    background:#2a2a2a;
+    color:white;
+
+}
+body.dark-mode .form-control{
+
+    background:#333;
+    color:white;
+    border-color:#555;
+
+}
+body.dark-mode textarea{
+
+    background:#333;
+    color:white;
+
+}
+body.dark-mode .dropdown-menu{
+
+    background:#2d2d2d;
+
+}
+body.dark-mode .dropdown-item{
+
+    color:white;
+
+}
+body.dark-mode .dropdown-item:hover{
+
+    background:#444;
+
+}
+body.dark-mode .btn-light{
+
+    background:#444;
+    color:white;
+    border:none;
+
+}
+body.dark-mode table{
+
+    color:white;
+
+}
+body.dark-mode a{
+
+    color:#90caf9;
+
+}
+
