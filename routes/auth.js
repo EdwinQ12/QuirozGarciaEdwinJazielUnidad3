@@ -23,7 +23,7 @@ const password = req.body.password;
         );
 
         if (resultado.rows.length === 0) {
-            req.session.mensaje = { tipo: 'error', texto: 'Usuario no encontrado' };
+            req.session.mensaje = { tipo: 'error', texto: 'Usuario o contraseña incorrectos' };
             return res.redirect('/login');
         }
 
@@ -31,14 +31,25 @@ const password = req.body.password;
         const acceso = await bcrypt.compare(password,usuario.password);
 
         if (acceso) {
-            req.session.usuario = usuario.correo;
-            req.session.nombre = usuario.nombre;
-            req.session.correo = usuario.correo;
-            req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
-            res.redirect('/dashboard');
+            // Regenerar la sesión para evitar ataques de fijación de sesión
+            req.session.regenerate((err) => {
+                // Manejar el error si ocurre durante la regeneración de la sesión
+                if (err) {
+                    console.error('Error al regenerar la sesión:', err);
+                    req.session.mensaje = { tipo: 'error', texto: 'Error al iniciar sesion' };
+                    return res.redirect('/login');
+                }
+// Guardar información del usuario en la sesión
+                req.session.usuario = usuario.correo;
+                req.session.nombre = usuario.nombre;
+                req.session.correo = usuario.correo;
+
+                req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
+                return res.redirect('/dashboard');
+            });
         } else {
-            req.session.mensaje = { tipo: 'error', texto: 'Contraseña incorrecta' };
-            res.redirect('/login');
+            req.session.mensaje = { tipo: 'error', texto: 'Contraseña o correo incorrectos' };
+            return res.redirect('/login');
         }
     } catch (error) {
         console.log(error);
@@ -108,7 +119,7 @@ router.post('/registro', async (req, res) => {
         req.session.mensaje = { tipo: 'success', texto: 'Registro exitoso, bienvenido ' + usuario.nombre };
         res.redirect('/login');
     } catch (error) {
-        console.log(error);
+        console.log('Error al registrar el Usuario', error);
         if (error && error.code === '23505') {
             req.session.mensaje = { tipo: 'error', texto: 'El correo ya está registrado' };
             return res.redirect('/registro');
