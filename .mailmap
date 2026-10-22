@@ -1,0 +1,21 @@
+# .mailmap
+# Unifica nombres y correos repetidos al mostrar el historial de git.
+# No modifica los commits, solo cómo se muestran (git log, git shortlog...).
+#
+# Ver el resultado con:
+#   git shortlog -sne
+
+# Edwin: mismo correo, dos nombres distintos
+Edwin Jaziel Quiroz Garcia <quiroz_020927@hotmail.com> EdwinQ12 <quiroz_020927@hotmail.com>
+
+# Edwin: mismo autor con dos correos (el de GitHub y el personal)
+Edwin Jaziel Quiroz Garcia <quiroz_020927@hotmail.com> <176067085+EdwinQ12@users.noreply.github.com>
+
+# Carlos: mismo correo, dos nombres de usuario distintos
+Carlos Cortes Cabrera <cortescabreram506@gmail.com> Carlos-M <cortescabreram506@gmail.com>
+Carlos Cortes Cabrera <cortescabreram506@gmail.com> Carlos335480 <cortescabreram506@gmail.com>
+
+# Aviso: el commit de los paneles admin/médico quedó registrado con el correo
+# de relleno "tuemail@example.com" (autor "brenda"). Para corregirlo de forma
+# definitiva habría que reescribir el historial, cosa que aquí NO se hizo
+# para no alterar los commits ya compartidos.
