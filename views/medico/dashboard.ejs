@@ -1,12 +1,59 @@
-<h1>Dashboard del Médico</h1>
+<%- include('../partials/header', { titulo: 'Panel de médico' }) %>
 
-<p>Bienvenido <%= nombre %></p>
+<body class="d-flex flex-column min-vh-100">
 
-<p>Rol: <%= rol %></p>
+<%- include('../partials/navbar') %>
 
-<a href="/admin/diagnosticos">
-    registrar diagnostico
-</a>
-<a href="/admin/citas">
-    administrar citas
-</a>
+<main class="flex-grow-1">
+
+    <div class="container mt-5 animate__animated animate__fadeInLeft">
+
+        <div class="card shadow-sm p-4 evento-cards">
+
+            <h1 class="mb-4 text-primary">
+                Panel de médico
+            </h1>
+
+            <p class="mb-1">
+                <strong>Nombre:</strong>
+                <%= nombre %>
+            </p>
+
+            <p class="mb-1">
+                <strong>Correo:</strong>
+                <%= correo %>
+            </p>
+
+            <p class="mb-4">
+                <strong>Rol:</strong>
+                <%= rol %>
+            </p>
+
+            <h5 class="mb-3">Funciones disponibles</h5>
+
+            <div class="list-group">
+                <a href="/chat" class="list-group-item list-group-item-action">
+                    Comentarios de pacientes
+                </a>
+
+                <a href="/buzon" class="list-group-item list-group-item-action">
+                    Buzón de sugerencias
+                </a>
+            </div>
+
+            <p class="text-muted mt-4 mb-0">
+                Módulos de diagnósticos y citas pendientes.
+            </p>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('../partials/alerts') %>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

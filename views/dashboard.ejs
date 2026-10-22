@@ -1,4 +1,4 @@
-<%- include('partials/header', { titulo: 'Dashboard' }) %>
+<%- include('partials/header', { titulo: 'Mi perfil' }) %>
 
 <body class="d-flex flex-column min-vh-100">
 
@@ -11,20 +11,35 @@
         <div class="card shadow-sm p-4 evento-cards">
 
             <h1 class="mb-4 text-primary">
-                Perfil
+                Mi perfil
             </h1>
 
-            <h4>
-                Bienvenido:
-                <span class="text-dark">
-                    <%= nombre %>
-                </span>
-            </h4>
-
-            <p class="mt-3">
-                Desde aquí puedes acceder a las funciones privadas
-                del sistema como el buzón y el chat.
+            <p class="mb-1">
+                <strong>Nombre:</strong>
+                <%= nombre %>
             </p>
+
+            <p class="mb-1">
+                <strong>Correo:</strong>
+                <%= correo %>
+            </p>
+
+            <p class="mb-4">
+                <strong>Rol:</strong>
+                <%= rol %>
+            </p>
+
+            <h5 class="mb-3">Funciones disponibles</h5>
+
+            <div class="list-group">
+                <a href="/buzon" class="list-group-item list-group-item-action">
+                    Buzón de sugerencias
+                </a>
+
+                <a href="/chat" class="list-group-item list-group-item-action">
+                    Comentarios de pacientes
+                </a>
+            </div>
 
         </div>
 
