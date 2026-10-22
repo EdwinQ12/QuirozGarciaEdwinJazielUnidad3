@@ -1,13 +1,19 @@
 {
-  "name": "proyecto-login",
+  "name": "consultorio-rayito-de-sol",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicación web del Consultorio Psicológico Infantil \"Un Rayito de Sol\" (Node.js + Express + PostgreSQL).",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node --watch app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "postgresql",
+    "ejs",
+    "seguridad"
+  ],
+  "author": "Edwin Jaziel Quiroz Garcia",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -17,8 +23,10 @@
     "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "express-session": "^1.19.0",
     "helmet": "^8.2.0",
+    "nodemailer": "^10.2.0",
     "pg": "^8.21.0",
     "sweetalert2": "^11.26.25"
   }
