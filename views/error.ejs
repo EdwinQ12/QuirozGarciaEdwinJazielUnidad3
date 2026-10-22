@@ -1,0 +1,34 @@
+<%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<%- include('partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5 animate__animated animate__fadeInLeft">
+
+        <div class="card shadow-sm p-5 text-center evento-cards">
+
+            <h1 class="text-danger mb-3">
+                <%= codigo %>
+            </h1>
+
+            <p class="lead">
+                <%= detalle %>
+            </p>
+
+            <a href="/" class="btn btn-primary">
+                Volver al Inicio
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

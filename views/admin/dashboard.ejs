@@ -1,0 +1,59 @@
+<%- include('../partials/header', { titulo: 'Panel de administrador' }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<%- include('../partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5 animate__animated animate__fadeInLeft">
+
+        <div class="card shadow-sm p-4 evento-cards">
+
+            <h1 class="mb-4 text-primary">
+                Panel de administrador
+            </h1>
+
+            <p class="mb-1">
+                <strong>Nombre:</strong>
+                <%= nombre %>
+            </p>
+
+            <p class="mb-1">
+                <strong>Correo:</strong>
+                <%= correo %>
+            </p>
+
+            <p class="mb-4">
+                <strong>Rol:</strong>
+                <%= rol %>
+            </p>
+
+            <h5 class="mb-3">Funciones disponibles</h5>
+
+            <div class="list-group">
+                <a href="/buzon" class="list-group-item list-group-item-action">
+                    Administrar buzón de sugerencias
+                </a>
+
+                <a href="/chat" class="list-group-item list-group-item-action">
+                    Revisar comentarios de pacientes
+                </a>
+            </div>
+
+            <p class="text-muted mt-4 mb-0">
+                Módulos de gestión de usuarios y especialistas pendientes.
+            </p>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('../partials/alerts') %>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

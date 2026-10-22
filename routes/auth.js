@@ -1,184 +1,269 @@
-//routes/auth.js
-const express = require('express');
-const router = express.Router();
-const conexion = require('../database/conexion');
-const bcrypt = require('bcrypt');
-const axios = require('axios');
-const Usuario = require('../models/Usuario');
-//const { protegerRuta } = require('./middleware');
+// routes/auth.js
+const express = require("express");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+const axios = require("axios");
 
-router.get('/', (req, res) => {
-    res.render('index');
+const router = express.Router();
+const conexion = require("../database/conexion");
+const Usuario = require("../models/Usuario");
+const { enviarCorreoRecuperacion } = require("../services/email");
+const {
+    limiteLogin,
+    limiteRegistro,
+    limiteRecuperacion
+} = require("../middleware/rateLimit");
+
+const MIN_PASSWORD = 8;
+
+// Los tokens se guardan como hash: si alguien lee la tabla, no puede usarlos.
+function hashToken(token) {
+    return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+async function tokenValido(token) {
+    if (!token) return false;
+
+    const resultado = await conexion.query(
+        `SELECT id FROM reset_tokens
+         WHERE token_hash = $1 AND usado = false AND expira > NOW()`,
+        [hashToken(token)]
+    );
+
+    return resultado.rows.length > 0;
+}
+
+// ---------------- Inicio ----------------
+router.get("/", (req, res) => {
+    res.render("index");
 });
 
-//aqui se hace el login del usuario, se compara la contraseña ingresada con la contraseña encriptada en la base de datos usando bcrypt.compare
-router.post('/login', async (req, res) => {
-const correo = req.body.correo;
-const password = req.body.password;
+// ---------------- Login ----------------
+router.get("/login", (req, res) => {
+    res.render("login");
+});
+
+router.post("/login", limiteLogin, async (req, res) => {
+    const correo = String(req.body.correo || "").trim().toLowerCase();
+    const password = String(req.body.password || "");
 
     try {
         const resultado = await conexion.query(
-            `SELECT * FROM usuarios WHERE correo = $1`,
+            `SELECT * FROM usuarios WHERE LOWER(correo) = $1`,
             [correo]
         );
 
         if (resultado.rows.length === 0) {
-            req.session.mensaje = { tipo: 'error', texto: 'Usuario o contraseña incorrectos' };
-            return res.redirect('/login');
+            req.session.mensaje = { tipo: "error", texto: "Usuario o contraseña incorrectos" };
+            return res.redirect("/login");
         }
 
         const usuario = resultado.rows[0];
-        const acceso = await bcrypt.compare(password,usuario.password);
+        const acceso = await bcrypt.compare(password, usuario.password);
 
-        if (acceso) {
-            // Regenerar la sesión para evitar ataques de fijación de sesión
-            req.session.regenerate((err) => {
-                // Manejar el error si ocurre durante la regeneración de la sesión
-                if (err) {
-                    console.error('Error al regenerar la sesión:', err);
-                    req.session.mensaje = { tipo: 'error', texto: 'Error al iniciar sesion' };
-                    return res.redirect('/login');
-                }
-// Guardar información del usuario en la sesión
-                req.session.usuario = usuario.correo;
-                req.session.nombre = usuario.nombre;
-                req.session.correo = usuario.correo;
-
-                req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
-                return res.redirect('/dashboard');
-            });
-        } else {
-            req.session.mensaje = { tipo: 'error', texto: 'Contraseña o correo incorrectos' };
-            return res.redirect('/login');
+        if (!acceso) {
+            req.session.mensaje = { tipo: "error", texto: "Usuario o contraseña incorrectos" };
+            return res.redirect("/login");
         }
-    } catch (error) {
-        console.log(error);
-        req.session.mensaje = { tipo: 'error', texto: 'Error en el login' };
-        res.redirect('/login');
-    }
-});
 
-router.get('/login', (req, res) => {
-    res.render('login');
-});
-
-
-router.get('/registro', (req, res) => {
-    
-    res.render('registro', {
-        siteKey: process.env.RECAPTCHA_SITE_KEY,
-    });
-});
-
-//en esta parte se hace el registro del usuario, se encripta la contraseña con bcrypt y se guarda en la base de datos
-router.post('/registro', async (req, res) => {
-    const nombre = req.body.nombre;
-    const correo = req.body.correo;
-    const password = req.body.password;
-    const usuario = new Usuario(
-        nombre,
-        correo,
-        password
-    );
-
-    // Verificar captcha
-    const captcha= req.body['g-recaptcha-response'];
-    if (!captcha) {
-
-        req.session.mensaje = { tipo: 'error', texto: 'Por favor, completa el captcha' };
-        return res.redirect('/registro');
-    }
-
-// Verificar la respuesta del captcha con Google
-    const verificarCaptcha = await axios.post(
-        `https://www.google.com/recaptcha/api/siteverify`, 
-        null, 
-        {
-            params: {
-                secret: process.env.RECAPTCHA_SECRET_KEY,
-                response: captcha
+        // Regenerar la sesión evita ataques de fijación de sesión
+        // (el atacante no puede reutilizar un id de sesión conocido).
+        req.session.regenerate((err) => {
+            if (err) {
+                console.error("Error al regenerar la sesión:", err);
+                req.session.mensaje = { tipo: "error", texto: "Error al iniciar sesión" };
+                return res.redirect("/login");
             }
-        }
-    );
-    if (!verificarCaptcha.data.success) {
-        req.session.mensaje = { tipo: 'error', texto: 'Captcha inválido' };
-        return res.redirect('/registro');
+
+            req.session.usuario = usuario.correo;
+            req.session.nombre = usuario.nombre;
+            req.session.correo = usuario.correo;
+            req.session.rol = usuario.rol || "paciente";
+            req.session.mensaje = { tipo: "success", texto: "Bienvenido " + usuario.nombre };
+
+            return res.redirect("/dashboard");
+        });
+    } catch (error) {
+        console.error("Error en el login:", error);
+        req.session.mensaje = { tipo: "error", texto: "Error en el login" };
+        res.redirect("/login");
+    }
+});
+
+// ---------------- Registro ----------------
+router.get("/registro", (req, res) => {
+    res.render("registro", { siteKey: process.env.RECAPTCHA_SITE_KEY });
+});
+
+router.post("/registro", limiteRegistro, async (req, res) => {
+    const nombre = String(req.body.nombre || "").trim();
+    const correo = String(req.body.correo || "").trim().toLowerCase();
+    const password = String(req.body.password || "");
+    const captcha = req.body["g-recaptcha-response"];
+
+    // Validación en el servidor (la del navegador se puede saltar).
+    if (nombre.length < 3 || !correo.includes("@") || password.length < MIN_PASSWORD) {
+        req.session.mensaje = {
+            tipo: "error",
+            texto: `Revisa los datos: nombre completo, un correo válido y una contraseña de al menos ${MIN_PASSWORD} caracteres.`
+        };
+        return res.redirect("/registro");
     }
 
-    //cifrar la contraseña con bcrypt antes de guardarla en la BD
-    try {
-        const hash = await bcrypt.hash(password, 10);
+    if (!captcha) {
+        req.session.mensaje = { tipo: "error", texto: "Por favor, completa el captcha" };
+        return res.redirect("/registro");
+    }
 
-        console.log('Correo:', correo);
-        console.log('Hash bcrypt:', hash);
+    try {
+        // Verificar la respuesta del captcha con Google
+        const verificarCaptcha = await axios.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            null,
+            {
+                params: {
+                    secret: process.env.RECAPTCHA_SECRET_KEY,
+                    response: captcha
+                }
+            }
+        );
+
+        if (!verificarCaptcha.data.success) {
+            req.session.mensaje = { tipo: "error", texto: "Captcha inválido" };
+            return res.redirect("/registro");
+        }
+
+        const usuario = new Usuario(nombre, correo, password);
+        const hash = await bcrypt.hash(usuario.password, 10);
 
         await conexion.query(
-            `INSERT INTO usuarios (nombre, correo, password) VALUES ($1, $2, $3)`,
-            [usuario.nombre, usuario.correo, hash]
+            `INSERT INTO usuarios (nombre, correo, password, rol) VALUES ($1, $2, $3, $4)`,
+            [usuario.nombre, usuario.correo, hash, "paciente"]
         );
-        req.session.mensaje = { tipo: 'success', texto: 'Registro exitoso, bienvenido ' + usuario.nombre };
-        res.redirect('/login');
+
+        req.session.mensaje = { tipo: "success", texto: "Registro exitoso, ya puedes iniciar sesión" };
+        return res.redirect("/login");
     } catch (error) {
-        console.log('Error al registrar el Usuario', error);
-        if (error && error.code === '23505') {
-            req.session.mensaje = { tipo: 'error', texto: 'El correo ya está registrado' };
-            return res.redirect('/registro');
+        console.error("Error al registrar el Usuario:", error);
+
+        if (error && error.code === "23505") {
+            req.session.mensaje = { tipo: "error", texto: "El correo ya está registrado" };
+            return res.redirect("/registro");
         }
-        req.session.mensaje = { tipo: 'error', texto: 'Error en el registro' };
-        res.redirect('/registro');
+
+        req.session.mensaje = { tipo: "error", texto: "Error en el registro" };
+        return res.redirect("/registro");
     }
 });
 
-router.get('/recuperar', (req, res) => {
-    res.render('recuperar',{
-        titulo: 'Recuperar contraseña'
-    });
+// ---------------- Recuperación de contraseña ----------------
+router.get("/recuperar", (req, res) => {
+    res.render("recuperar", { titulo: "Recuperar contraseña" });
 });
 
-//ruta para enviar el correo de recuperación de contraseña, se verifica que el correo exista en la base de datos y se redirige a la página de nueva contraseña
-router.post('/recuperar', async (req, res) => {
-    const correo = req.body.correo;
-    console.log("correo recibido:", correo);
+// Solicita el enlace de recuperación.
+// Genera un token aleatorio de un solo uso y lo envía por correo.
+router.post("/recuperar", limiteRecuperacion, async (req, res) => {
+    const correo = String(req.body.correo || "").trim().toLowerCase();
 
+    // Respuesta genérica: no revelamos si el correo existe (evita enumerar usuarios).
+    const respuestaGenerica = {
+        tipo: "success",
+        texto: "Si el correo está registrado, recibirás un enlace para restablecer tu contraseña."
+    };
 
     try {
         const resultado = await conexion.query(
-            `SELECT * FROM usuarios WHERE correo = $1`,
+            `SELECT id FROM usuarios WHERE LOWER(correo) = $1`,
             [correo]
         );
 
-        console.log("Resultado de la consulta:", resultado.rows);
-        if (resultado.rows.length === 0) {
-            req.session.mensaje = { tipo: 'error', texto: 'Usuario no encontrado' };
-            return res.redirect('/recuperar');
+        if (resultado.rows.length > 0) {
+            const token = crypto.randomBytes(32).toString("hex");
+            const expira = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+
+            // Un solo token activo por correo.
+            await conexion.query(`DELETE FROM reset_tokens WHERE correo = $1`, [correo]);
+            await conexion.query(
+                `INSERT INTO reset_tokens (correo, token_hash, expira) VALUES ($1, $2, $3)`,
+                [correo, hashToken(token), expira]
+            );
+
+            const enlace = `${req.protocol}://${req.get("host")}/nueva-password?token=${token}`;
+            await enviarCorreoRecuperacion({ para: correo, enlace });
         }
-        res.render('nueva-password', { titulo: 'Nueva contraseña', correo });
+
+        req.session.mensaje = respuestaGenerica;
+        return res.redirect("/login");
     } catch (error) {
-        console.log(error);
-        req.session.mensaje = { tipo: 'error', texto: 'Error al verificar el correo' };
-        res.redirect('/recuperar');
+        console.error("Error en /recuperar:", error);
+        req.session.mensaje = { tipo: "error", texto: "Error al procesar la solicitud" };
+        return res.redirect("/recuperar");
     }
 });
 
-//ruta para actualizar la contraseña, se encripta la nueva contraseña con bcrypt antes de guardarla en la base de datos
-router.post('/nueva-password', async (req, res) => {
-    const correo = req.body.correo;
-    const password = req.body.password;
+// Formulario para escribir la nueva contraseña: exige un token válido.
+router.get("/nueva-password", async (req, res) => {
+    const token = String(req.query.token || "");
 
     try {
+        if (!(await tokenValido(token))) {
+            req.session.mensaje = { tipo: "error", texto: "El enlace no es válido o ya expiró" };
+            return res.redirect("/recuperar");
+        }
+
+        res.render("nueva-password", { titulo: "Nueva contraseña", token });
+    } catch (error) {
+        console.error("Error al validar el token:", error);
+        req.session.mensaje = { tipo: "error", texto: "Error al validar el enlace" };
+        res.redirect("/recuperar");
+    }
+});
+
+// Guarda la nueva contraseña (solo con token válido y sin usar).
+router.post("/nueva-password", limiteRecuperacion, async (req, res) => {
+    const token = String(req.body.token || "");
+    const password = String(req.body.password || "");
+
+    if (password.length < MIN_PASSWORD) {
+        req.session.mensaje = {
+            tipo: "error",
+            texto: `La contraseña debe tener al menos ${MIN_PASSWORD} caracteres`
+        };
+        return res.redirect(`/nueva-password?token=${encodeURIComponent(token)}`);
+    }
+
+    try {
+        const resultado = await conexion.query(
+            `SELECT correo FROM reset_tokens
+             WHERE token_hash = $1 AND usado = false AND expira > NOW()`,
+            [hashToken(token)]
+        );
+
+        if (resultado.rows.length === 0) {
+            req.session.mensaje = { tipo: "error", texto: "El enlace no es válido o ya expiró" };
+            return res.redirect("/recuperar");
+        }
+
+        const correo = resultado.rows[0].correo;
         const hash = await bcrypt.hash(password, 10);
 
         await conexion.query(
-            `UPDATE usuarios SET password = $1 WHERE correo = $2`,
+            `UPDATE usuarios SET password = $1 WHERE LOWER(correo) = $2`,
             [hash, correo]
         );
+        // El token se marca como usado: no puede reutilizarse.
+        await conexion.query(
+            `UPDATE reset_tokens SET usado = true WHERE token_hash = $1`,
+            [hashToken(token)]
+        );
 
-        req.session.mensaje = { tipo: 'success', texto: 'Contraseña actualizada correctamente' };
-        res.redirect('/login');
+        req.session.mensaje = { tipo: "success", texto: "Contraseña actualizada correctamente" };
+        return res.redirect("/login");
     } catch (error) {
-        console.log(error);
-        req.session.mensaje = { tipo: 'error', texto: 'Error al actualizar la contraseña' };
-        res.redirect('/recuperar');
+        console.error("Error al actualizar la contraseña:", error);
+        req.session.mensaje = { tipo: "error", texto: "Error al actualizar la contraseña" };
+        return res.redirect("/recuperar");
     }
 });
 

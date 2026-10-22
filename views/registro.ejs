@@ -14,6 +14,8 @@
 
             <form action="/registro" method="POST">
 
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
                 <div class="mb-3">
                     <label class="form-label">Nombre completo</label>
                     <input
@@ -42,9 +44,15 @@
                         required>
                 </div>
 
+                <% if (siteKey) { %>
                 <div class="mb-3">
                     <div class="g-recaptcha" data-sitekey="<%= siteKey %>"></div>
                 </div>
+                <% } else { %>
+                <div class="alert alert-warning">
+                    Falta configurar <code>RECAPTCHA_SITE_KEY</code> en el archivo <code>.env</code>.
+                </div>
+                <% } %>
 
                 <button type="submit" class="btn btn-success">
                     Registrar Usuario
@@ -66,7 +74,9 @@
 
 <%- include('partials/footer') %>
 
+<% if (siteKey) { %>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<% } %>
 
 </body>
 </html>
