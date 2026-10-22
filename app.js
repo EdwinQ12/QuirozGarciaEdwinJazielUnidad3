@@ -58,6 +58,7 @@ app.use((req, res, next) => {
 
     res.locals.usuario = req.session.usuario;
     res.locals.nombre = req.session.nombre;
+    res.locals.rol = req.session.rol;
 
     next();
 

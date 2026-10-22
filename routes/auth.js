@@ -31,22 +31,11 @@ const password = req.body.password;
         const acceso = await bcrypt.compare(password,usuario.password);
 
         if (acceso) {
-            // Regenerar la sesión para evitar ataques de fijación de sesión
-            req.session.regenerate((err) => {
-                // Manejar el error si ocurre durante la regeneración de la sesión
-                if (err) {
-                    console.error('Error al regenerar la sesión:', err);
-                    req.session.mensaje = { tipo: 'error', texto: 'Error al iniciar sesion' };
-                    return res.redirect('/login');
-                }
-// Guardar información del usuario en la sesión
-                req.session.usuario = usuario.correo;
-                req.session.nombre = usuario.nombre;
-                req.session.correo = usuario.correo;
-
-                req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
-                return res.redirect('/dashboard');
-            });
+            req.session.usuario = usuario.correo;
+            req.session.nombre = usuario.nombre;
+            req.session.correo = usuario.correo;
+            req.session.mensaje = { tipo: 'success', texto: 'Bienvenido ' + usuario.nombre };
+            res.redirect('/dashboard');
         } else {
             req.session.mensaje = { tipo: 'error', texto: 'Contraseña o correo incorrectos' };
             return res.redirect('/login');
@@ -113,8 +102,8 @@ router.post('/registro', async (req, res) => {
         console.log('Hash bcrypt:', hash);
 
         await conexion.query(
-            `INSERT INTO usuarios (nombre, correo, password) VALUES ($1, $2, $3)`,
-            [usuario.nombre, usuario.correo, hash]
+            `INSERT INTO usuarios (nombre, correo, password, rol) VALUES ($1, $2, $3, $4)`,
+            [usuario.nombre, usuario.correo, hash, 'paciente']
         );
         req.session.mensaje = { tipo: 'success', texto: 'Registro exitoso, bienvenido ' + usuario.nombre };
         res.redirect('/login');
