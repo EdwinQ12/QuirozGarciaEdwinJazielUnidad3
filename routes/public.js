@@ -28,6 +28,10 @@ router.get("/mapa-sitio", (req, res) => {
     res.render("mapa-sitio", { titulo: "Mapa del Sitio" });
 });
 
+router.get("/rincon", (req, res) => {
+    res.render("rincon", { titulo: "Rincón de Rayito" });
+});
+
 // Búsqueda sencilla: redirige al usuario a la página que escribió.
 router.get("/buscar", (req, res) => {
     const busqueda = String(req.query.q || "").trim().toLowerCase();

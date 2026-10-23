@@ -1,39 +1,47 @@
+// public/js/modoOscuro.js
+//
+// Cambia entre modo claro y oscuro. La preferencia se guarda en el
+// navegador. El botón del navbar está disponible para todos los
+// visitantes (antes solo lo veían los usuarios con sesión iniciada).
 document.addEventListener("DOMContentLoaded", () => {
 
-    const interruptor = document.getElementById("modoOscuro");
+    const interruptor = document.getElementById("modoOscuro");   // checkbox (opcional)
+    const boton = document.getElementById("modoOscuroBtn");      // botón del navbar
+    const icono = boton ? boton.querySelector("i") : null;
 
-    // Recuperar la preferencia guardada
-    if (localStorage.getItem("modo") === "oscuro") {
+    function aplicar(oscuro) {
 
-        document.body.classList.add("dark-mode");
+        document.body.classList.toggle("dark-mode", oscuro);
+        localStorage.setItem("modo", oscuro ? "oscuro" : "claro");
 
         if (interruptor) {
-            interruptor.checked = true;
+            interruptor.checked = oscuro;
+        }
+
+        if (boton) {
+            boton.setAttribute("aria-pressed", String(oscuro));
+            boton.setAttribute("aria-label", oscuro ? "Activar modo claro" : "Activar modo oscuro");
+            boton.title = oscuro ? "Modo claro" : "Modo oscuro";
+        }
+
+        if (icono) {
+            icono.classList.toggle("fa-moon", !oscuro);
+            icono.classList.toggle("fa-sun", oscuro);
         }
 
     }
 
-    // Escuchar el cambio del switch
+    // Recuperar la preferencia guardada.
+    aplicar(localStorage.getItem("modo") === "oscuro");
+
     if (interruptor) {
+        interruptor.addEventListener("change", () => aplicar(interruptor.checked));
+    }
 
-        interruptor.addEventListener("change", () => {
-
-            if (interruptor.checked) {
-
-                document.body.classList.add("dark-mode");
-
-                localStorage.setItem("modo", "oscuro");
-
-            } else {
-
-                document.body.classList.remove("dark-mode");
-
-                localStorage.setItem("modo", "claro");
-
-            }
-
+    if (boton) {
+        boton.addEventListener("click", () => {
+            aplicar(!document.body.classList.contains("dark-mode"));
         });
-
     }
 
 });

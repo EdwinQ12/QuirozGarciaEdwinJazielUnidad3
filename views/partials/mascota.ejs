@@ -1,0 +1,68 @@
+<!-- Mascota "Rayito": sol animado cuyos ojos siguen al cursor.
+     Al hacer clic dice una frase motivacional. -->
+<div class="text-center">
+
+    <button
+        type="button"
+        class="rayito"
+        data-rayito
+        aria-label="Saluda a Rayito, la mascota del consultorio">
+
+        <span class="rayito-burbuja" data-burbuja role="status" aria-live="polite"></span>
+
+        <svg class="rayito-svg" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+
+            <defs>
+                <radialGradient id="gradRayito" cx="35%" cy="30%" r="78%">
+                    <stop offset="0%" stop-color="#FFF59D" />
+                    <stop offset="55%" stop-color="#FFD54F" />
+                    <stop offset="100%" stop-color="#FFB300" />
+                </radialGradient>
+            </defs>
+
+            <g class="rayito-flotar">
+
+                <g class="rayito-rayos" stroke="#FFD54F" stroke-width="9" stroke-linecap="round">
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(0 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(30 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(60 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(90 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(120 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(150 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(180 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(210 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(240 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(270 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(300 120 120)" />
+                    <line x1="120" y1="6" x2="120" y2="24" transform="rotate(330 120 120)" />
+                </g>
+
+                <circle cx="120" cy="120" r="74" fill="url(#gradRayito)" />
+
+                <ellipse cx="82" cy="141" rx="13" ry="9" fill="#FF8A80" opacity="0.55" />
+                <ellipse cx="158" cy="141" rx="13" ry="9" fill="#FF8A80" opacity="0.55" />
+
+                <g class="rayito-ojo">
+                    <ellipse cx="94" cy="108" rx="15" ry="17" fill="#FFFFFF" />
+                    <circle class="rayito-pupila" data-pupila cx="96" cy="110" r="7" fill="#3E2723" />
+                </g>
+
+                <g class="rayito-ojo rayito-ojo--der">
+                    <ellipse cx="146" cy="108" rx="15" ry="17" fill="#FFFFFF" />
+                    <circle class="rayito-pupila" data-pupila cx="148" cy="110" r="7" fill="#3E2723" />
+                </g>
+
+                <path
+                    d="M96 146 Q120 170 144 146"
+                    fill="none"
+                    stroke="#3E2723"
+                    stroke-width="6"
+                    stroke-linecap="round" />
+
+            </g>
+
+        </svg>
+
+    </button>
+
+</div>

@@ -1,0 +1,497 @@
+/* =========================================================
+   Un Rayito de Sol - Interactividad
+   Mascota, nubes, microinteracciones y "Rincón de Rayito".
+   ========================================================= */
+
+/* ---------------- Cielo con nubes ---------------- */
+.cielo {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.nube {
+    position: absolute;
+    left: -240px;
+    width: 150px;
+    height: 46px;
+    background: #e6f4ff;
+    border-radius: 46px;
+    opacity: 0.9;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: cruzar;
+}
+
+.nube::before,
+.nube::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.nube::before {
+    width: 66px;
+    height: 66px;
+    top: -32px;
+    left: 20px;
+}
+
+.nube::after {
+    width: 46px;
+    height: 46px;
+    top: -21px;
+    right: 22px;
+}
+
+.nube-1 { top: 10%; animation-duration: 75s;  animation-delay: -12s; transform: scale(0.8); }
+.nube-2 { top: 34%; animation-duration: 98s;  animation-delay: -48s; transform: scale(1.25); }
+.nube-3 { top: 62%; animation-duration: 84s;  animation-delay: -70s; transform: scale(0.65); }
+.nube-4 { top: 82%; animation-duration: 115s; animation-delay: -25s; transform: scale(1); }
+
+@keyframes cruzar {
+    from { left: -240px; }
+    to   { left: 100%; }
+}
+
+body.dark-mode .nube {
+    background: #24384d;
+    opacity: 0.55;
+}
+
+/* ---------------- Mascota Rayito ---------------- */
+.rayito {
+    position: relative;
+    display: block;
+    width: 175px;
+    max-width: 55%;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.rayito:focus-visible {
+    outline: 3px dashed #0d6efd;
+    outline-offset: 8px;
+    border-radius: 50%;
+}
+
+.rayito-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.rayito-flotar {
+    animation: flotar 3.4s ease-in-out infinite;
+    transform-origin: 120px 120px;
+}
+
+.rayito-rayos {
+    animation: girar 26s linear infinite;
+    transform-origin: 120px 120px;
+}
+
+.rayito-ojo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: parpadear 5.5s infinite;
+}
+
+.rayito-ojo--der {
+    animation-delay: 0.06s;
+}
+
+.rayito-pupila {
+    transition: transform 0.12s ease-out;
+}
+
+.rayito-burbuja {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 12px);
+    z-index: 3;
+    transform: translateX(-50%) scale(0.7);
+    transform-origin: bottom center;
+    padding: 10px 14px;
+    background: #ffffff;
+    color: #22405c;
+    border: 3px solid #ffc107;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    font-weight: 700;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.rayito-burbuja::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 9px solid transparent;
+    border-top-color: #ffc107;
+}
+
+.rayito-burbuja.visible {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+body.dark-mode .rayito-burbuja {
+    background: #1f1f1f;
+    color: #ffffff;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes parpadear {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95%           { transform: scaleY(0.12); }
+}
+
+/* ---------------- Hero ---------------- */
+.hero-section {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 2.2rem 1.4rem 2.4rem;
+}
+
+body.dark-mode .hero-section {
+    background: #2a2a2a;
+}
+
+.hero-section .rayito {
+    margin-bottom: 0.6rem;
+}
+
+/* ---------------- Inclinación 3D de tarjetas ---------------- */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card.evento-cards {
+        transition: transform 0.12s ease-out, box-shadow 0.3s ease;
+        will-change: transform;
+    }
+}
+
+/* ---------------- Confeti ---------------- */
+.confeti {
+    position: fixed;
+    top: -24px;
+    z-index: 2000;
+    width: 10px;
+    height: 14px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: caer 2.8s ease-in forwards;
+}
+
+@keyframes caer {
+    to {
+        transform: translateY(112vh) rotate(720deg);
+        opacity: 0.9;
+    }
+}
+
+/* =========================================================
+   Rincón de Rayito
+   ========================================================= */
+.rincon-hero {
+    padding-top: 1.25rem;
+    text-align: center;
+}
+
+.seccion-juego {
+    height: 100%;
+    padding: 1.4rem;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(13, 110, 253, 0.08);
+}
+
+body.dark-mode .seccion-juego {
+    background: #2a2a2a;
+    box-shadow: none;
+}
+
+/* Bootstrap deja text-muted demasiado oscuro sobre el fondo oscuro. */
+body.dark-mode .text-muted,
+body.dark-mode .form-text {
+    color: #adb5bd !important;
+}
+
+.seccion-juego h2 {
+    font-size: 1.15rem;
+}
+
+/* ---------------- Memorama ---------------- */
+.memorama {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.55rem;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.carta {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    aspect-ratio: 1 / 1;
+    perspective: 700px;
+    cursor: pointer;
+}
+
+.carta:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 3px;
+    border-radius: 18px;
+}
+
+.carta-inner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border-radius: 16px;
+}
+
+.carta.volteada .carta-inner,
+.carta.encontrada .carta-inner {
+    transform: rotateY(180deg);
+}
+
+.carta-cara {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.carta-frente {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #ffffff;
+}
+
+.carta-reverso {
+    background: #fff8e1;
+    color: #22405c;
+    border: 2px solid #ffc107;
+    transform: rotateY(180deg);
+}
+
+.carta-reverso small {
+    font-size: 0.6rem;
+    font-weight: 700;
+}
+
+.carta.encontrada .carta-reverso {
+    background: #e8f9ee;
+    border-color: #198754;
+    animation: latido 0.45s ease;
+}
+
+@keyframes latido {
+    0%   { transform: rotateY(180deg) scale(1); }
+    50%  { transform: rotateY(180deg) scale(1.12); }
+    100% { transform: rotateY(180deg) scale(1); }
+}
+
+/* ---------------- Emociones ---------------- */
+.emociones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    justify-content: center;
+}
+
+.emocion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    min-width: 82px;
+    padding: 0.65rem 0.8rem;
+    background: #f4f8ff;
+    color: #22405c;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.emocion .emoji {
+    font-size: 1.85rem;
+    line-height: 1;
+}
+
+.emocion:hover {
+    transform: translateY(-3px);
+    border-color: #4facfe;
+}
+
+.emocion[aria-pressed="true"] {
+    background: #fff8e1;
+    border-color: #ffc107;
+}
+
+body.dark-mode .emocion {
+    background: #333333;
+    color: #ffffff;
+}
+
+.emocion-respuesta {
+    padding: 1rem 1.1rem;
+    background: #f4f8ff;
+    border-left: 5px solid #4facfe;
+    border-radius: 14px;
+    animation: aparecer 0.3s ease;
+}
+
+.emocion-respuesta-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.emocion-respuesta-cabecera span {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.emocion-respuesta h4 {
+    margin: 0;
+    font-size: 1.02rem;
+}
+
+.emocion-respuesta p {
+    margin: 0.4rem 0 0;
+    font-size: 0.95rem;
+}
+
+.emocion-tip {
+    color: #0b5ed7;
+}
+
+body.dark-mode .emocion-respuesta {
+    background: #333333;
+}
+
+body.dark-mode .emocion-tip {
+    color: #7cc4ff;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- Respiración ---------------- */
+.respiracion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.respiracion-circulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    height: 170px;
+    padding: 1rem;
+    background: radial-gradient(circle at 35% 30%, #9be7ff, #4facfe);
+    border-radius: 50%;
+    box-shadow: 0 0 0 10px rgba(79, 172, 254, 0.15);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-align: center;
+    transform: scale(0.72);
+    transition: transform 4s ease-in-out;
+}
+
+.respiracion-circulo.inhala { transform: scale(1); }
+.respiracion-circulo.exhala { transform: scale(0.72); }
+
+.respiracion-cuenta {
+    min-height: 2.2rem;
+    color: #0d6efd;
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+body.dark-mode .respiracion-cuenta {
+    color: #7cc4ff;
+}
+
+/* ---------------- Menos movimiento ---------------- */
+@media (prefers-reduced-motion: reduce) {
+    .nube,
+    .rayito-flotar,
+    .rayito-rayos,
+    .rayito-ojo,
+    .confeti {
+        animation: none !important;
+    }
+
+    .respiracion-circulo,
+    .carta-inner {
+        transition: none !important;
+    }
+
+    .cielo {
+        display: none;
+    }
+}
+
+/* ---------------- Móvil ---------------- */
+@media (max-width: 575.98px) {
+    .memorama {
+        gap: 0.4rem;
+    }
+
+    .carta-cara {
+        font-size: 1.35rem;
+    }
+
+    .emocion {
+        min-width: 72px;
+        font-size: 0.78rem;
+    }
+
+    .rayito-burbuja {
+        font-size: 0.82rem;
+        white-space: normal;
+        width: max-content;
+        max-width: 220px;
+    }
+}
