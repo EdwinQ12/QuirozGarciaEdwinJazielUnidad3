@@ -2,6 +2,13 @@
 
 <body class="d-flex flex-column min-vh-100">
 
+<div class="cielo" aria-hidden="true">
+    <div class="nube nube-1"></div>
+    <div class="nube nube-2"></div>
+    <div class="nube nube-3"></div>
+    <div class="nube nube-4"></div>
+</div>
+
 <%- include('partials/navbar') %>
 
 <main class="flex-grow-1">
@@ -9,6 +16,8 @@
     <div class="container mt-5">
 
         <div class="hero-section text-center shadow-sm animate__animated animate__fadeInLeft">
+
+            <%- include('partials/mascota') %>
 
             <h1 class="display-5">
                 Consultorio Psicológico Infantil
@@ -23,6 +32,19 @@
                 para niñas, niños y sus familias mediante
                 atención profesional y personalizada.
             </p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+
+                <a href="/rincon" class="btn btn-warning btn-lg fw-bold shadow-sm">
+                    <i class="fa-solid fa-gamepad me-2" aria-hidden="true"></i>
+                    Ir al Rincón de Rayito
+                </a>
+
+                <a href="/servicios" class="btn btn-outline-primary btn-lg fw-bold">
+                    Ver servicios
+                </a>
+
+            </div>
 
         </div>
 
@@ -78,6 +100,37 @@
                         </p>
 
                     </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card shadow-sm p-4 mb-5 evento-cards">
+
+            <div class="row align-items-center g-3">
+
+                <div class="col-md-8">
+
+                    <h3 class="mb-2">
+                        🎈 Un espacio para jugar y aprender
+                    </h3>
+
+                    <p class="mb-0">
+                        En el Rincón de Rayito encontrarás un memorama de emociones,
+                        un ejercicio de respiración y un espacio para decir cómo te
+                        sientes hoy. Pensado para nuestras niñas y niños.
+                    </p>
+
+                </div>
+
+                <div class="col-md-4 text-md-end">
+
+                    <a href="/rincon" class="btn btn-primary">
+                        Entrar al Rincón
+                        <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i>
+                    </a>
 
                 </div>
 

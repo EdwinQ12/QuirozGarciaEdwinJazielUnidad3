@@ -1,0 +1,233 @@
+<%- include('partials/header', { titulo: 'Rincón de Rayito' }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div class="cielo" aria-hidden="true">
+    <div class="nube nube-1"></div>
+    <div class="nube nube-2"></div>
+    <div class="nube nube-3"></div>
+    <div class="nube nube-4"></div>
+</div>
+
+<%- include('partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5">
+
+        <div class="rincon-hero mb-5 animate__animated animate__fadeInDown">
+
+            <%- include('partials/mascota') %>
+
+            <h1 class="display-6 mt-3">
+                Rincón de Rayito
+            </h1>
+
+            <p class="lead">
+                Juegos y ejercicios para sentirte mejor.
+                Elige uno y diviértete un rato.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- ================= Memorama ================= -->
+            <div class="col-lg-6">
+
+                <section class="seccion-juego" aria-labelledby="titulo-memorama">
+
+                    <h2 id="titulo-memorama" class="mb-1">
+                        🎴 Memorama de emociones
+                    </h2>
+
+                    <p class="text-muted small mb-3">
+                        Encuentra los pares y aprende el nombre de cada emoción.
+                    </p>
+
+                    <div class="d-flex justify-content-between mb-3 small fw-bold">
+
+                        <span>
+                            Intentos:
+                            <span id="memorama-intentos">0</span>
+                        </span>
+
+                        <span>
+                            Pares:
+                            <span id="memorama-pares">0 de 8</span>
+                        </span>
+
+                    </div>
+
+                    <div id="memorama" class="memorama mb-3"></div>
+
+                    <p
+                        id="memorama-mensaje"
+                        class="text-success fw-bold text-center mb-2"
+                        role="status"
+                        aria-live="polite"></p>
+
+                    <div class="text-center">
+
+                        <button
+                            id="memorama-reiniciar"
+                            type="button"
+                            class="btn btn-outline-primary btn-sm">
+
+                            <i class="fa-solid fa-rotate-right me-1"></i>
+                            Revolver de nuevo
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- ================= Emociones ================= -->
+            <div class="col-lg-6">
+
+                <section class="seccion-juego" aria-labelledby="titulo-emociones">
+
+                    <h2 id="titulo-emociones" class="mb-1">
+                        💬 ¿Cómo me siento hoy?
+                    </h2>
+
+                    <p class="text-muted small mb-3">
+                        Toca la carita que se parezca a cómo te sientes.
+                    </p>
+
+                    <div id="emociones" class="emociones mb-3">
+
+                        <button type="button" class="emocion" data-emocion="feliz" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😀</span>
+                            Feliz
+                        </button>
+
+                        <button type="button" class="emocion" data-emocion="triste" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😢</span>
+                            Triste
+                        </button>
+
+                        <button type="button" class="emocion" data-emocion="enojado" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😡</span>
+                            Enojado
+                        </button>
+
+                        <button type="button" class="emocion" data-emocion="asustado" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😨</span>
+                            Asustado
+                        </button>
+
+                        <button type="button" class="emocion" data-emocion="cansado" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😴</span>
+                            Cansado
+                        </button>
+
+                        <button type="button" class="emocion" data-emocion="tranquilo" aria-pressed="false">
+                            <span class="emoji" aria-hidden="true">😌</span>
+                            Tranquilo
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="emocion-respuesta"
+                        class="emocion-respuesta"
+                        tabindex="-1"
+                        hidden
+                        aria-live="polite"></div>
+
+                    <p class="text-muted small mt-3 mb-0">
+                        Si algo te preocupa mucho, pídele a un adulto de confianza
+                        que hable con nosotros.
+                    </p>
+
+                </section>
+
+            </div>
+
+            <!-- ================= Respiración ================= -->
+            <div class="col-12">
+
+                <section class="seccion-juego" aria-labelledby="titulo-respiracion">
+
+                    <div class="row align-items-center g-4">
+
+                        <div class="col-md-6">
+
+                            <h2 id="titulo-respiracion" class="mb-1">
+                                🌬️ Respira conmigo
+                            </h2>
+
+                            <p class="text-muted small mb-3">
+                                Sigue el círculo: se hace grande cuando tomas aire
+                                y pequeño cuando lo sueltas.
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Inhala</strong> 4 segundos,
+                                <strong>sostén</strong> 2 y
+                                <strong>exhala</strong> 4.
+                            </p>
+
+                            <p class="small text-muted mb-0">
+                                Ciclos completados:
+                                <span id="respiracion-ciclo">0</span>
+                            </p>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="respiracion">
+
+                                <div
+                                    id="respiracion-circulo"
+                                    class="respiracion-circulo">
+
+                                    <span id="respiracion-texto">
+                                        Presiona comenzar
+                                    </span>
+
+                                </div>
+
+                                <div
+                                    id="respiracion-cuenta"
+                                    class="respiracion-cuenta"
+                                    aria-live="polite"></div>
+
+                                <button
+                                    id="respiracion-boton"
+                                    type="button"
+                                    class="btn btn-primary px-4">
+
+                                    Comenzar
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('partials/alerts') %>
+
+<%- include('partials/footer') %>
+
+<script src="/js/rincon.js"></script>
+
+</body>
+</html>
