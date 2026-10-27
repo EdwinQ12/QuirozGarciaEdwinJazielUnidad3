@@ -1,4 +1,4 @@
-<%- include('partials/header', { titulo: 'Mi perfil' }) %>
+<%- include('partials/header', { titulo: 'Mi panel' }) %>
 
 <body class="d-flex flex-column min-vh-100">
 
@@ -6,39 +6,224 @@
 
 <main class="flex-grow-1">
 
-    <div class="container mt-5 animate__animated animate__fadeInLeft">
+    <div class="container mt-5">
 
-        <div class="card shadow-sm p-4 evento-cards">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
 
-            <h1 class="mb-4 text-primary">
-                Mi perfil
-            </h1>
+            <div>
+                <h1 class="text-primary mb-1">Hola, <%= nombre %></h1>
+                <p class="text-muted mb-0">Este es tu espacio en Un Rayito de Sol.</p>
+            </div>
 
-            <p class="mb-1">
-                <strong>Nombre:</strong>
-                <%= nombre %>
-            </p>
+            <a href="/citas" class="btn btn-warning fw-bold">
+                <i class="fa-solid fa-calendar-plus me-2" aria-hidden="true"></i>
+                Agendar cita
+            </a>
 
-            <p class="mb-1">
-                <strong>Correo:</strong>
-                <%= correo %>
-            </p>
+        </div>
 
-            <p class="mb-4">
-                <strong>Rol:</strong>
-                <%= rol %>
-            </p>
+        <div class="row g-3 mb-4">
 
-            <h5 class="mb-3">Funciones disponibles</h5>
+            <!-- Próxima cita -->
+            <div class="col-md-4">
 
-            <div class="list-group">
-                <a href="/buzon" class="list-group-item list-group-item-action">
-                    Buzón de sugerencias
-                </a>
+                <div class="card shadow-sm h-100 tarjeta-resumen">
 
-                <a href="/chat" class="list-group-item list-group-item-action">
-                    Comentarios de pacientes
-                </a>
+                    <div class="card-body">
+
+                        <span class="resumen-icono" aria-hidden="true">📅</span>
+                        <h6 class="text-muted mb-2">Próxima cita</h6>
+
+                        <% if (proxima) { %>
+
+                            <h4 class="mb-1"><%= proxima.fecha %></h4>
+                            <p class="mb-1 fw-bold"><%= proxima.hora %></p>
+                            <p class="mb-0 small"><%= proxima.especialista %></p>
+                            <p class="text-muted small mb-0"><%= proxima.especialidad %></p>
+
+                        <% } else { %>
+
+                            <p class="mb-0 text-muted">Aún no tienes citas programadas.</p>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Citas -->
+            <div class="col-md-4">
+
+                <div class="card shadow-sm h-100 tarjeta-resumen">
+
+                    <div class="card-body">
+
+                        <span class="resumen-icono" aria-hidden="true">✅</span>
+                        <h6 class="text-muted mb-2">Citas atendidas</h6>
+
+                        <h4 class="mb-1"><%= resumen.atendidas %></h4>
+                        <p class="text-muted small mb-0">
+                            de <%= resumen.citas %> agendadas
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Diario -->
+            <div class="col-md-4">
+
+                <div class="card shadow-sm h-100 tarjeta-resumen">
+
+                    <div class="card-body">
+
+                        <span class="resumen-icono" aria-hidden="true">📔</span>
+                        <h6 class="text-muted mb-2">Días en tu diario</h6>
+
+                        <h4 class="mb-1"><%= resumen.dias %></h4>
+                        <p class="text-muted small mb-0">
+                            Registros de emociones
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Emoción de hoy -->
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">¿Cómo te sientes hoy?</h5>
+
+                        <% if (emocionHoy) { %>
+
+                            <div class="d-flex align-items-center gap-3 mb-3">
+
+                                <span class="emocion-grande" aria-hidden="true">
+                                    <%= mapaEmociones[emocionHoy.emocion].emoji %>
+                                </span>
+
+                                <div>
+
+                                    <p class="mb-0 fw-bold">
+                                        Hoy te sientes <%= mapaEmociones[emocionHoy.emocion].nombre.toLowerCase() %>
+                                    </p>
+
+                                    <% if (emocionHoy.nota) { %>
+                                        <p class="text-muted small mb-0"><%= emocionHoy.nota %></p>
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                            <a href="/diario" class="btn btn-outline-primary btn-sm">
+                                Editar el registro de hoy
+                            </a>
+
+                        <% } else { %>
+
+                            <p class="text-muted">
+                                Todavía no registraste cómo te sientes hoy.
+                            </p>
+
+                            <a href="/diario" class="btn btn-primary">
+                                Registrar mi emoción
+                            </a>
+
+                        <% } %>
+
+                        <% if (historial.length > 0) { %>
+
+                            <hr>
+
+                            <p class="text-muted small mb-2">Últimos días</p>
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <% historial.forEach(function (fila) { %>
+
+                                    <span
+                                        class="chip-emocion"
+                                        title="<%= mapaEmociones[fila.emocion].nombre %> · <%= fila.fecha %>">
+
+                                        <span aria-hidden="true"><%= mapaEmociones[fila.emocion].emoji %></span>
+                                        <small><%= fila.fecha %></small>
+
+                                    </span>
+
+                                <% }); %>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Accesos rápidos</h5>
+
+                        <div class="list-group">
+
+                            <a href="/citas" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-calendar-days me-2 text-primary" aria-hidden="true"></i>Mis citas</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                            <a href="/diario" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-face-smile me-2 text-primary" aria-hidden="true"></i>Diario de emociones</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                            <a href="/rincon" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-gamepad me-2 text-primary" aria-hidden="true"></i>Rincón de Rayito</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                            <a href="/perfil" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-user me-2 text-primary" aria-hidden="true"></i>Mi perfil</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                            <a href="/buzon" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-envelope me-2 text-primary" aria-hidden="true"></i>Buzón de sugerencias</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                            <a href="/chat" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <span><i class="fa-solid fa-comments me-2 text-primary" aria-hidden="true"></i>Comentarios</span>
+                                <i class="fa-solid fa-chevron-right small" aria-hidden="true"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>

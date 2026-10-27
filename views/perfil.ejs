@@ -1,0 +1,194 @@
+<%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<%- include('partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5">
+
+        <h1 class="text-primary mb-4">
+            <i class="fa-solid fa-user me-2" aria-hidden="true"></i>
+            Mi perfil
+        </h1>
+
+        <div class="row g-4">
+
+            <!-- Datos personales -->
+            <div class="col-lg-7">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Datos personales</h5>
+
+                        <form action="/perfil" method="POST">
+
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                            <div class="mb-3">
+
+                                <label for="nombre" class="form-label">Nombre completo</label>
+
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    id="nombre"
+                                    class="form-control"
+                                    value="<%= datos.nombre %>"
+                                    maxlength="120"
+                                    required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label for="correo" class="form-label">Correo electrónico</label>
+
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    class="form-control"
+                                    value="<%= datos.correo %>"
+                                    disabled>
+
+                                <div class="form-text">
+                                    El correo no se puede cambiar: es con el que inicias sesión.
+                                </div>
+
+                            </div>
+
+                            <div class="row g-3">
+
+                                <div class="col-sm-6">
+
+                                    <label for="telefono" class="form-label">Teléfono</label>
+
+                                    <input
+                                        type="tel"
+                                        name="telefono"
+                                        id="telefono"
+                                        class="form-control"
+                                        value="<%= datos.telefono %>"
+                                        maxlength="30"
+                                        placeholder="(844) 000-0000">
+
+                                </div>
+
+                                <div class="col-sm-6">
+
+                                    <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
+
+                                    <input
+                                        type="date"
+                                        name="fecha_nacimiento"
+                                        id="fecha_nacimiento"
+                                        class="form-control"
+                                        value="<%= datos.fecha_nacimiento || '' %>">
+
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-4">
+                                <i class="fa-solid fa-floppy-disk me-2" aria-hidden="true"></i>
+                                Guardar cambios
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Contraseña -->
+            <div class="col-lg-5">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Cambiar contraseña</h5>
+
+                        <form action="/perfil/password" method="POST">
+
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                            <div class="mb-3">
+
+                                <label for="actual" class="form-label">Contraseña actual</label>
+
+                                <input
+                                    type="password"
+                                    name="actual"
+                                    id="actual"
+                                    class="form-control"
+                                    required>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label for="nueva" class="form-label">Contraseña nueva</label>
+
+                                <input
+                                    type="password"
+                                    name="nueva"
+                                    id="nueva"
+                                    class="form-control"
+                                    minlength="8"
+                                    required>
+
+                                <div class="form-text">Mínimo 8 caracteres.</div>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label for="repetir" class="form-label">Repetir contraseña nueva</label>
+
+                                <input
+                                    type="password"
+                                    name="repetir"
+                                    id="repetir"
+                                    class="form-control"
+                                    minlength="8"
+                                    required>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fa-solid fa-key me-2" aria-hidden="true"></i>
+                                Actualizar contraseña
+                            </button>
+
+                        </form>
+
+                        <hr>
+
+                        <p class="text-muted small mb-0">
+                            Cuenta creada el <%= datos.creado %>.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('partials/alerts') %>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

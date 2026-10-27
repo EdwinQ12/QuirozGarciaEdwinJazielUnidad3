@@ -79,6 +79,7 @@ router.post("/login", limiteLogin, async (req, res) => {
             req.session.nombre = usuario.nombre;
             req.session.correo = usuario.correo;
             req.session.rol = usuario.rol || "paciente";
+            req.session.usuarioId = usuario.id;
             req.session.mensaje = { tipo: "success", texto: "Bienvenido " + usuario.nombre };
 
             return res.redirect("/dashboard");

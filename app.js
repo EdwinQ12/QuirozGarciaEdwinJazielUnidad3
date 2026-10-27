@@ -11,6 +11,7 @@ const { exponerToken, validarToken } = require("./middleware/csrf");
 // Importar rutas
 const authRoutes = require("./routes/auth");
 const dashboardRoutes = require("./routes/dashboard");
+const clinicaRoutes = require("./routes/clinica");
 const publicRoutes = require("./routes/public");
 
 const app = express();
@@ -112,6 +113,7 @@ app.use(validarToken);
 // Rutas
 app.use("/", authRoutes);
 app.use("/", dashboardRoutes);
+app.use("/", clinicaRoutes);
 app.use("/", publicRoutes);
 
 // Manejo de errores 404
