@@ -1,31 +1,136 @@
 // routes/dashboard.js
 const express = require("express");
 const router = express.Router();
+
 const conexion = require("../database/conexion");
 const { protegerRuta } = require("./middleware");
+const { idUsuario } = require("../services/usuario");
+const { EMOCIONES, MAPA } = require("../services/emociones");
 
 const NOMBRE_COOKIE = "rayito.sid";
 
-// Panel principal: muestra una vista distinta según el rol del usuario.
-router.get("/dashboard", protegerRuta, (req, res) => {
+/* =========================================================
+   Panel principal (cambia según el rol)
+   ========================================================= */
+router.get("/dashboard", protegerRuta, async (req, res) => {
+    const rol = req.session.rol || "paciente";
     const datos = {
         nombre: req.session.nombre,
         correo: req.session.correo,
-        rol: req.session.rol || "paciente"
+        rol: rol
     };
 
-    if (datos.rol === "administrador") {
-        return res.render("admin/dashboard", datos);
-    }
+    try {
+        if (rol === "administrador") {
+            return res.render("admin/dashboard", {
+                ...datos,
+                stats: (await conexion.query(
+                    `SELECT (SELECT COUNT(*) FROM usuarios)::int                            AS usuarios,
+                            (SELECT COUNT(*) FROM citas)::int                               AS citas,
+                            (SELECT COUNT(*) FROM citas WHERE estado = 'pendiente')::int    AS pendientes,
+                            (SELECT COUNT(*) FROM citas WHERE fecha = CURRENT_DATE)::int    AS hoy,
+                            (SELECT COUNT(*) FROM buzon)::int                               AS mensajes`
+                )).rows[0],
+                citas: (await conexion.query(
+                    `SELECT c.id,
+                            u.nombre AS paciente,
+                            TO_CHAR(c.fecha, 'DD/MM/YYYY') AS fecha,
+                            TO_CHAR(c.hora, 'HH24:MI')     AS hora,
+                            c.estado,
+                            e.nombre AS especialista
+                       FROM citas c
+                       JOIN usuarios u      ON u.id = c.usuario_id
+                       JOIN especialistas e ON e.id = c.especialista_id
+                      ORDER BY c.fecha DESC, c.hora DESC
+                      LIMIT 12`
+                )).rows
+            });
+        }
 
-    if (datos.rol === "medico") {
-        return res.render("medico/dashboard", datos);
-    }
+        if (rol === "medico") {
+            return res.render("medico/dashboard", {
+                ...datos,
+                citas: (await conexion.query(
+                    `SELECT c.id,
+                            u.nombre AS paciente,
+                            TO_CHAR(c.fecha, 'DD/MM/YYYY') AS fecha,
+                            TO_CHAR(c.hora, 'HH24:MI')     AS hora,
+                            c.motivo,
+                            c.estado,
+                            e.nombre AS especialista
+                       FROM citas c
+                       JOIN usuarios u      ON u.id = c.usuario_id
+                       JOIN especialistas e ON e.id = c.especialista_id
+                      WHERE c.estado IN ('pendiente', 'confirmada')
+                      ORDER BY c.fecha, c.hora
+                      LIMIT 40`
+                )).rows
+            });
+        }
 
-    return res.render("dashboard", datos);
+        // ---------------- Paciente ----------------
+        const usuarioId = await idUsuario(req);
+
+        const [proxima, resumen, emocionHoy, historial] = await Promise.all([
+            conexion.query(
+                `SELECT TO_CHAR(c.fecha, 'DD/MM/YYYY') AS fecha,
+                        TO_CHAR(c.hora, 'HH24:MI')     AS hora,
+                        c.estado,
+                        e.nombre       AS especialista,
+                        e.especialidad
+                   FROM citas c
+                   JOIN especialistas e ON e.id = c.especialista_id
+                  WHERE c.usuario_id = $1
+                    AND c.estado IN ('pendiente', 'confirmada')
+                    AND c.fecha >= CURRENT_DATE
+                  ORDER BY c.fecha, c.hora
+                  LIMIT 1`,
+                [usuarioId]
+            ),
+            conexion.query(
+                `SELECT (SELECT COUNT(*) FROM citas WHERE usuario_id = $1)::int                       AS citas,
+                        (SELECT COUNT(*) FROM citas WHERE usuario_id = $1 AND estado = 'atendida')::int AS atendidas,
+                        (SELECT COUNT(*) FROM diario_emociones WHERE usuario_id = $1)::int             AS dias`,
+                [usuarioId]
+            ),
+            conexion.query(
+                `SELECT emocion, nota
+                   FROM diario_emociones
+                  WHERE usuario_id = $1 AND fecha = CURRENT_DATE`,
+                [usuarioId]
+            ),
+            conexion.query(
+                `SELECT emocion, TO_CHAR(fecha, 'DD/MM') AS fecha
+                   FROM diario_emociones
+                  WHERE usuario_id = $1
+                  ORDER BY fecha DESC
+                  LIMIT 7`,
+                [usuarioId]
+            )
+        ]);
+
+        res.render("dashboard", {
+            ...datos,
+            proxima: proxima.rows[0] || null,
+            resumen: resumen.rows[0],
+            emocionHoy: emocionHoy.rows[0] || null,
+            historial: historial.rows,
+            mapaEmociones: MAPA
+        });
+    } catch (error) {
+        console.error("Error al cargar el panel:", error);
+        req.session.mensaje = { tipo: "error", texto: "No se pudo cargar el panel" };
+        res.render("error", {
+            titulo: "Error",
+            codigo: 500,
+            detalle: "No se pudo cargar el panel. Revisa la conexión a la base de datos."
+        });
+    }
 });
 
-// ---------------- Buzón de sugerencias (área privada) ----------------
+/* =========================================================
+   Buzón de sugerencias (área privada)
+   ========================================================= */
 router.get("/buzon", protegerRuta, (req, res) => {
     res.render("buzon", {
         titulo: "Buzón",
@@ -56,7 +161,9 @@ router.post("/buzon", protegerRuta, async (req, res) => {
     res.redirect("/buzon");
 });
 
-// ---------------- Chat de comentarios (área privada) ----------------
+/* =========================================================
+   Chat de comentarios (área privada)
+   ========================================================= */
 router.get("/chat", protegerRuta, async (req, res) => {
     try {
         const mensajes = await conexion.query(`SELECT * FROM chat ORDER BY fecha ASC`);
@@ -91,7 +198,9 @@ router.post("/chat", protegerRuta, async (req, res) => {
     }
 });
 
-// ---------------- Cerrar sesión ----------------
+/* =========================================================
+   Cerrar sesión
+   ========================================================= */
 router.get("/logout", protegerRuta, (req, res) => {
     req.session.destroy((err) => {
         if (err) {

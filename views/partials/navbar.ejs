@@ -96,26 +96,49 @@
 
                         <li>
                             <a class="dropdown-item" href="/dashboard">
-                                Perfil
+                                <i class="fa-solid fa-house me-2" aria-hidden="true"></i>Mi panel
+                            </a>
+                        </li>
+
+                        <% if (rol === 'paciente') { %>
+
+                            <li>
+                                <a class="dropdown-item" href="/citas">
+                                    <i class="fa-solid fa-calendar-days me-2" aria-hidden="true"></i>Mis citas
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="/diario">
+                                    <i class="fa-solid fa-face-smile me-2" aria-hidden="true"></i>Diario de emociones
+                                </a>
+                            </li>
+
+                        <% } %>
+
+                        <li>
+                            <a class="dropdown-item" href="/perfil">
+                                <i class="fa-solid fa-user me-2" aria-hidden="true"></i>Mi perfil
                             </a>
                         </li>
 
                         <li>
                             <a class="dropdown-item" href="/buzon">
-                                Buzón
+                                <i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>Buzón
                             </a>
                         </li>
 
                         <li>
                             <a class="dropdown-item" href="/chat">
-                                Chat
+                                <i class="fa-solid fa-comments me-2" aria-hidden="true"></i>Chat
                             </a>
                         </li>
+
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
                             <a class="dropdown-item text-danger" href="/logout">
-                                Cerrar Sesión
+                                <i class="fa-solid fa-right-from-bracket me-2" aria-hidden="true"></i>Cerrar Sesión
                             </a>
                         </li>
 

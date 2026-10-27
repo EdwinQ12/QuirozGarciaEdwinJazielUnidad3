@@ -6,44 +6,109 @@
 
 <main class="flex-grow-1">
 
-    <div class="container mt-5 animate__animated animate__fadeInLeft">
+    <div class="container mt-5">
 
-        <div class="card shadow-sm p-4 evento-cards">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
 
-            <h1 class="mb-4 text-primary">
-                Panel de médico
-            </h1>
-
-            <p class="mb-1">
-                <strong>Nombre:</strong>
-                <%= nombre %>
-            </p>
-
-            <p class="mb-1">
-                <strong>Correo:</strong>
-                <%= correo %>
-            </p>
-
-            <p class="mb-4">
-                <strong>Rol:</strong>
-                <%= rol %>
-            </p>
-
-            <h5 class="mb-3">Funciones disponibles</h5>
-
-            <div class="list-group">
-                <a href="/chat" class="list-group-item list-group-item-action">
-                    Comentarios de pacientes
-                </a>
-
-                <a href="/buzon" class="list-group-item list-group-item-action">
-                    Buzón de sugerencias
-                </a>
+            <div>
+                <h1 class="text-primary mb-1">Panel de médico</h1>
+                <p class="text-muted mb-0">
+                    <%= nombre %> · <%= correo %>
+                </p>
             </div>
 
-            <p class="text-muted mt-4 mb-0">
-                Módulos de diagnósticos y citas pendientes.
-            </p>
+            <a href="/chat" class="btn btn-outline-primary">
+                <i class="fa-solid fa-comments me-2" aria-hidden="true"></i>
+                Comentarios
+            </a>
+
+        </div>
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="mb-3">Citas pendientes y confirmadas</h5>
+
+                <% if (citas.length === 0) { %>
+
+                    <p class="text-muted mb-0">
+                        No hay citas pendientes por atender.
+                    </p>
+
+                <% } else { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table align-middle tabla-citas mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Paciente</th>
+                                    <th scope="col">Especialista</th>
+                                    <th scope="col">Motivo</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col" class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <% citas.forEach(function (c) { %>
+
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <%= c.fecha %>
+                                            <span class="text-muted small d-block"><%= c.hora %> hrs</span>
+                                        </td>
+
+                                        <td><%= c.paciente %></td>
+
+                                        <td class="small"><%= c.especialista %></td>
+
+                                        <td class="small motivo-celda"><%= c.motivo %></td>
+
+                                        <td>
+                                            <%- include('../partials/badge-estado', { estado: c.estado }) %>
+                                        </td>
+
+                                        <td class="text-end text-nowrap">
+
+                                            <form action="/citas/<%= c.id %>/estado" method="POST" class="d-inline-flex gap-1">
+
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                                                <% if (c.estado === 'pendiente') { %>
+                                                    <button name="estado" value="confirmada" class="btn btn-sm btn-outline-primary">
+                                                        Confirmar
+                                                    </button>
+                                                <% } %>
+
+                                                <button name="estado" value="atendida" class="btn btn-sm btn-outline-success">
+                                                    Atender
+                                                </button>
+
+                                                <button name="estado" value="cancelada" class="btn btn-sm btn-outline-danger">
+                                                    Cancelar
+                                                </button>
+
+                                            </form>
+
+                                        </td>
+                                    </tr>
+
+                                <% }); %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } %>
+
+            </div>
 
         </div>
 

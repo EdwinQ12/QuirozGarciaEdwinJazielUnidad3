@@ -1,0 +1,194 @@
+<%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<%- include('partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5">
+
+        <h1 class="text-primary mb-1">
+            <i class="fa-solid fa-face-smile me-2" aria-hidden="true"></i>
+            Mi diario de emociones
+        </h1>
+
+        <p class="text-muted mb-4">
+            Un espacio para reconocer cómo te sientes. Se guarda uno por día.
+        </p>
+
+        <div class="row g-4">
+
+            <!-- Registro de hoy -->
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">
+                            <%= hoy ? 'Actualizar el registro de hoy' : '¿Cómo te sientes hoy?' %>
+                        </h5>
+
+                        <form action="/diario" method="POST">
+
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                            <fieldset class="mb-3">
+
+                                <legend class="form-label fs-6">Elige una carita</legend>
+
+                                <div class="emociones-radio">
+
+                                    <% emociones.forEach(function (e) { %>
+
+                                        <input
+                                            type="radio"
+                                            class="btn-check"
+                                            name="emocion"
+                                            id="emo-<%= e.clave %>"
+                                            value="<%= e.clave %>"
+                                            <%= hoy && hoy.emocion === e.clave ? 'checked' : '' %>
+                                            required>
+
+                                        <label class="emocion-opcion" for="emo-<%= e.clave %>">
+                                            <span class="emoji" aria-hidden="true"><%= e.emoji %></span>
+                                            <span class="nombre"><%= e.nombre %></span>
+                                        </label>
+
+                                    <% }); %>
+
+                                </div>
+
+                            </fieldset>
+
+                            <div class="mb-3">
+
+                                <label for="nota" class="form-label">
+                                    ¿Quieres contar algo más? (opcional)
+                                </label>
+
+                                <textarea
+                                    name="nota"
+                                    id="nota"
+                                    rows="3"
+                                    maxlength="500"
+                                    class="form-control"
+                                    placeholder="Hoy me sentí así porque..."><%= hoy ? (hoy.nota || '') : '' %></textarea>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa-solid fa-floppy-disk me-2" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Resumen y historial -->
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Últimos 30 días</h5>
+
+                        <% if (resumen.length === 0) { %>
+
+                            <p class="text-muted mb-0">Todavía no hay registros.</p>
+
+                        <% } else { %>
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <% resumen.forEach(function (r) { %>
+
+                                    <% var info = emociones.find(function (e) { return e.clave === r.emocion; }); %>
+
+                                    <span class="chip-emocion">
+
+                                        <span aria-hidden="true"><%= info ? info.emoji : '🙂' %></span>
+                                        <small><%= info ? info.nombre : r.emocion %> · <%= r.total %></small>
+
+                                    </span>
+
+                                <% }); %>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+                <div class="card shadow-sm">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Historial</h5>
+
+                        <% if (entradas.length === 0) { %>
+
+                            <p class="text-muted mb-0">Aún no has registrado ninguna emoción.</p>
+
+                        <% } else { %>
+
+                            <div class="lista-diario">
+
+                                <% entradas.forEach(function (fila) { %>
+
+                                    <% var info = emociones.find(function (e) { return e.clave === fila.emocion; }); %>
+
+                                    <div class="diario-item">
+
+                                        <span class="diario-emoji" aria-hidden="true">
+                                            <%= info ? info.emoji : '🙂' %>
+                                        </span>
+
+                                        <div>
+
+                                            <p class="mb-0 fw-bold small">
+                                                <%= info ? info.nombre : fila.emocion %>
+                                                <span class="text-muted fw-normal">· <%= fila.fecha %></span>
+                                            </p>
+
+                                            <% if (fila.nota) { %>
+                                                <p class="text-muted small mb-0"><%= fila.nota %></p>
+                                            <% } %>
+
+                                        </div>
+
+                                    </div>
+
+                                <% }); %>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('partials/alerts') %>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

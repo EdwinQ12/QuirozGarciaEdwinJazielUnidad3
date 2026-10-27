@@ -1,0 +1,280 @@
+/* =========================================================
+   Un Rayito de Sol - Área privada del consultorio
+   Tarjetas de resumen, citas, diario y perfil.
+   ========================================================= */
+
+/* ---------------- Tarjetas de resumen ---------------- */
+.tarjeta-resumen .card-body {
+    position: relative;
+    padding-top: 1.6rem;
+}
+
+.resumen-icono {
+    position: absolute;
+    top: 0.9rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    opacity: 0.85;
+}
+
+/* ---------------- Chips de emoción ---------------- */
+.chip-emocion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    background: #f4f8ff;
+    border: 1px solid #dbe7f7;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: #22405c;
+}
+
+.emocion-grande {
+    font-size: 2.6rem;
+    line-height: 1;
+}
+
+body.dark-mode .chip-emocion {
+    background: #333;
+    border-color: #444;
+    color: #fff;
+}
+
+/* ---------------- Lista de citas ---------------- */
+.lista-citas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cita-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    background: #f8fbff;
+    border: 1px solid #e3eefc;
+    border-radius: 14px;
+}
+
+.cita-fecha {
+    display: flex;
+    flex-direction: column;
+    min-width: 96px;
+    padding-right: 0.9rem;
+    border-right: 2px solid #dbe7f7;
+}
+
+.cita-dia {
+    font-weight: 800;
+    color: #0d6efd;
+    font-size: 0.95rem;
+}
+
+.cita-hora {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.cita-info {
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+.cita-motivo {
+    color: #4a5b6d;
+    overflow-wrap: anywhere;
+}
+
+.cita-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+}
+
+body.dark-mode .cita-item {
+    background: #2f2f2f;
+    border-color: #3d3d3d;
+}
+
+body.dark-mode .cita-fecha {
+    border-right-color: #4a4a4a;
+}
+
+body.dark-mode .cita-dia {
+    color: #7cc4ff;
+}
+
+body.dark-mode .cita-motivo {
+    color: #cfd8e3;
+}
+
+/* ---------------- Badges de estado ---------------- */
+.badge-estado {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.4em 0.7em;
+    border-radius: 999px;
+    text-transform: capitalize;
+}
+
+.badge-pendiente {
+    background: #fff3cd;
+    color: #7a5b00;
+}
+
+.badge-confirmada {
+    background: #cfe8ff;
+    color: #084298;
+}
+
+.badge-atendida {
+    background: #d1e7dd;
+    color: #0a3622;
+}
+
+.badge-cancelada {
+    background: #e9ecef;
+    color: #495057;
+}
+
+body.dark-mode .badge-pendiente {
+    background: #4d3f10;
+    color: #ffd966;
+}
+
+body.dark-mode .badge-confirmada {
+    background: #12385e;
+    color: #9ecbff;
+}
+
+body.dark-mode .badge-atendida {
+    background: #14422c;
+    color: #8fe0b0;
+}
+
+body.dark-mode .badge-cancelada {
+    background: #3a3a3a;
+    color: #c9c9c9;
+}
+
+/* ---------------- Diario ---------------- */
+.emociones-radio {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.emocion-opcion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    min-width: 78px;
+    padding: 0.6rem 0.7rem;
+    background: #f4f8ff;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #22405c;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.emocion-opcion .emoji {
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.emocion-opcion:hover {
+    transform: translateY(-2px);
+    border-color: #4facfe;
+}
+
+.btn-check:checked + .emocion-opcion {
+    background: #fff8e1;
+    border-color: #ffc107;
+}
+
+.btn-check:focus-visible + .emocion-opcion {
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+body.dark-mode .emocion-opcion {
+    background: #333;
+    color: #fff;
+}
+
+body.dark-mode .btn-check:checked + .emocion-opcion {
+    background: #4a3c12;
+    border-color: #ffc107;
+    color: #fff;
+}
+
+.lista-diario {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.diario-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    background: #f8fbff;
+    border-radius: 12px;
+}
+
+.diario-emoji {
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+body.dark-mode .diario-item {
+    background: #2f2f2f;
+}
+
+/* ---------------- Tablas del panel médico/admin ---------------- */
+.tabla-citas td,
+.tabla-citas th {
+    vertical-align: middle;
+}
+
+.motivo-celda {
+    max-width: 260px;
+    overflow-wrap: anywhere;
+}
+
+/* ---------------- Móvil ---------------- */
+@media (max-width: 575.98px) {
+    .cita-item {
+        gap: 0.6rem;
+    }
+
+    .cita-fecha {
+        min-width: 100%;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: baseline;
+        border-right: 0;
+        border-bottom: 1px solid #dbe7f7;
+        padding: 0 0 0.4rem;
+    }
+
+    .cita-acciones {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .motivo-celda {
+        max-width: 160px;
+    }
+}

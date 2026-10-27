@@ -1,0 +1,188 @@
+<%- include('partials/header', { titulo: titulo }) %>
+
+<body class="d-flex flex-column min-vh-100">
+
+<%- include('partials/navbar') %>
+
+<main class="flex-grow-1">
+
+    <div class="container mt-5">
+
+        <h1 class="text-primary mb-4">
+            <i class="fa-solid fa-calendar-days me-2" aria-hidden="true"></i>
+            Mis citas
+        </h1>
+
+        <div class="row g-4">
+
+            <!-- Formulario para agendar -->
+            <div class="col-lg-5">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Agendar una cita</h5>
+
+                        <form action="/citas" method="POST">
+
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                            <div class="mb-3">
+
+                                <label for="especialista_id" class="form-label">Especialista</label>
+
+                                <select name="especialista_id" id="especialista_id" class="form-select" required>
+                                    <option value="">Selecciona uno</option>
+                                    <% especialistas.forEach(function (e) { %>
+                                        <option value="<%= e.id %>">
+                                            <%= e.nombre %> — <%= e.especialidad %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+
+                            </div>
+
+                            <div class="row g-3">
+
+                                <div class="col-sm-6">
+
+                                    <label for="fecha" class="form-label">Fecha</label>
+
+                                    <input
+                                        type="date"
+                                        name="fecha"
+                                        id="fecha"
+                                        class="form-control"
+                                        min="<%= hoy %>"
+                                        required>
+
+                                </div>
+
+                                <div class="col-sm-6">
+
+                                    <label for="hora" class="form-label">Hora</label>
+
+                                    <select name="hora" id="hora" class="form-select" required>
+
+                                        <option value="">Selecciona</option>
+
+                                        <% horarios.forEach(function (h) { %>
+                                            <option value="<%= h %>"><%= h %> hrs</option>
+                                        <% }); %>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3 mt-3">
+
+                                <label for="motivo" class="form-label">Motivo de la consulta</label>
+
+                                <textarea
+                                    name="motivo"
+                                    id="motivo"
+                                    rows="4"
+                                    class="form-control"
+                                    maxlength="600"
+                                    placeholder="Cuéntanos brevemente qué necesitas"
+                                    required></textarea>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa-solid fa-calendar-check me-2" aria-hidden="true"></i>
+                                Agendar cita
+                            </button>
+
+                        </form>
+
+                        <p class="text-muted small mt-3 mb-0">
+                            Horario de atención: 9:00 a 13:00 y 16:00 a 18:00 hrs.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Historial -->
+            <div class="col-lg-7">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Historial</h5>
+
+                        <% if (citas.length === 0) { %>
+
+                            <p class="text-muted mb-0">
+                                Todavía no tienes citas. Agenda la primera con el formulario.
+                            </p>
+
+                        <% } else { %>
+
+                            <div class="lista-citas">
+
+                                <% citas.forEach(function (c) { %>
+
+                                    <div class="cita-item">
+
+                                        <div class="cita-fecha">
+                                            <span class="cita-dia"><%= c.fecha %></span>
+                                            <span class="cita-hora"><%= c.hora %> hrs</span>
+                                        </div>
+
+                                        <div class="cita-info">
+                                            <p class="mb-1 fw-bold"><%= c.especialista %></p>
+                                            <p class="text-muted small mb-1"><%= c.especialidad %></p>
+                                            <p class="small mb-0 cita-motivo"><%= c.motivo %></p>
+                                        </div>
+
+                                        <div class="cita-acciones">
+
+                                            <%- include('partials/badge-estado', { estado: c.estado }) %>
+
+                                            <% if (c.estado === 'pendiente' || c.estado === 'confirmada') { %>
+
+                                                <form action="/citas/<%= c.id %>/cancelar" method="POST" class="mt-2">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        Cancelar
+                                                    </button>
+                                                </form>
+
+                                            <% } %>
+
+                                        </div>
+
+                                    </div>
+
+                                <% }); %>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('partials/alerts') %>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>
