@@ -101,15 +101,27 @@ router.post("/citas", protegerRuta, async (req, res) => {
         const usuarioId = await idUsuario(req);
         if (!usuarioId) return res.redirect("/login");
 
-        // La fecha se valida contra el reloj de la base de datos.
+        // La fecha y la hora se validan contra el reloj de la base de datos:
+        // no se permite agendar en el pasado ni a una hora que ya pasó hoy.
         const rango = await conexion.query(
-            `SELECT $1::date >= CURRENT_DATE
-                    AND $1::date <= (CURRENT_DATE + INTERVAL '6 months') AS valida`,
-            [fecha]
+            `SELECT ($1::date + $2::time) > LOCALTIMESTAMP           AS futura,
+                    $1::date >= CURRENT_DATE                        AS de_hoy_en_adelante,
+                    $1::date <= (CURRENT_DATE + INTERVAL '6 months') AS dentro_del_rango`,
+            [fecha, hora]
         );
 
-        if (!rango.rows[0].valida) {
-            return error("La fecha debe ser de hoy en adelante (máximo 6 meses)");
+        const chequeo = rango.rows[0];
+
+        if (!chequeo.de_hoy_en_adelante) {
+            return error("La fecha debe ser de hoy en adelante");
+        }
+
+        if (!chequeo.dentro_del_rango) {
+            return error("La fecha debe estar dentro de los próximos 6 meses");
+        }
+
+        if (!chequeo.futura) {
+            return error("Esa hora ya pasó. Elige un horario más tarde.");
         }
 
         const especialista = await conexion.query(

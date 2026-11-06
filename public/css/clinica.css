@@ -141,6 +141,12 @@ body.dark-mode .cita-motivo {
     color: #495057;
 }
 
+/* Cita cuya fecha ya pasó y nadie registró el resultado. */
+.badge-vencida {
+    background: #ffe0e0;
+    color: #8a1c1c;
+}
+
 body.dark-mode .badge-pendiente {
     background: #4d3f10;
     color: #ffd966;
@@ -159,6 +165,11 @@ body.dark-mode .badge-atendida {
 body.dark-mode .badge-cancelada {
     background: #3a3a3a;
     color: #c9c9c9;
+}
+
+body.dark-mode .badge-vencida {
+    background: #4a1f1f;
+    color: #ffb3b3;
 }
 
 /* ---------------- Diario ---------------- */

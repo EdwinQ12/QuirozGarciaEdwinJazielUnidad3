@@ -43,6 +43,14 @@ router.get("/login", (req, res) => {
     res.render("login");
 });
 
+// Cuando el login falla se responde con 401 y la misma vista, en lugar
+// de redirigir. Así el limitador de intentos puede contar solo las
+// fallas y no los inicios de sesión correctos.
+function loginFallido(res, texto) {
+    res.locals.mensaje = { tipo: "error", texto: texto };
+    return res.status(401).render("login");
+}
+
 router.post("/login", limiteLogin, async (req, res) => {
     const correo = String(req.body.correo || "").trim().toLowerCase();
     const password = String(req.body.password || "");
@@ -54,16 +62,14 @@ router.post("/login", limiteLogin, async (req, res) => {
         );
 
         if (resultado.rows.length === 0) {
-            req.session.mensaje = { tipo: "error", texto: "Usuario o contraseña incorrectos" };
-            return res.redirect("/login");
+            return loginFallido(res, "Usuario o contraseña incorrectos");
         }
 
         const usuario = resultado.rows[0];
         const acceso = await bcrypt.compare(password, usuario.password);
 
         if (!acceso) {
-            req.session.mensaje = { tipo: "error", texto: "Usuario o contraseña incorrectos" };
-            return res.redirect("/login");
+            return loginFallido(res, "Usuario o contraseña incorrectos");
         }
 
         // Regenerar la sesión evita ataques de fijación de sesión
@@ -71,8 +77,7 @@ router.post("/login", limiteLogin, async (req, res) => {
         req.session.regenerate((err) => {
             if (err) {
                 console.error("Error al regenerar la sesión:", err);
-                req.session.mensaje = { tipo: "error", texto: "Error al iniciar sesión" };
-                return res.redirect("/login");
+                return loginFallido(res, "Error al iniciar sesión");
             }
 
             req.session.usuario = usuario.correo;
@@ -86,8 +91,7 @@ router.post("/login", limiteLogin, async (req, res) => {
         });
     } catch (error) {
         console.error("Error en el login:", error);
-        req.session.mensaje = { tipo: "error", texto: "Error en el login" };
-        res.redirect("/login");
+        return loginFallido(res, "Error en el login");
     }
 });
 

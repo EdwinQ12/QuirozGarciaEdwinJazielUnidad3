@@ -122,7 +122,7 @@
                                         <td class="small"><%= c.especialista %></td>
 
                                         <td>
-                                            <%- include('../partials/badge-estado', { estado: c.estado }) %>
+                                            <%- include('../partials/badge-estado', { estado: c.estado_visible }) %>
                                         </td>
 
                                         <td class="text-end text-nowrap">
@@ -131,7 +131,7 @@
 
                                                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-                                                <% if (c.estado === 'pendiente') { %>
+                                                <% if (c.estado === 'pendiente' && c.estado_visible !== 'vencida') { %>
                                                     <button name="estado" value="confirmada" class="btn btn-sm btn-outline-primary">
                                                         Confirmar
                                                     </button>

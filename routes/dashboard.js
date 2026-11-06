@@ -27,7 +27,9 @@ router.get("/dashboard", protegerRuta, async (req, res) => {
                 stats: (await conexion.query(
                     `SELECT (SELECT COUNT(*) FROM usuarios)::int                            AS usuarios,
                             (SELECT COUNT(*) FROM citas)::int                               AS citas,
-                            (SELECT COUNT(*) FROM citas WHERE estado = 'pendiente')::int    AS pendientes,
+                            (SELECT COUNT(*) FROM citas
+                              WHERE estado = 'pendiente'
+                                AND fecha >= CURRENT_DATE)::int                             AS pendientes,
                             (SELECT COUNT(*) FROM citas WHERE fecha = CURRENT_DATE)::int    AS hoy,
                             (SELECT COUNT(*) FROM buzon)::int                               AS mensajes`
                 )).rows[0],
@@ -37,6 +39,8 @@ router.get("/dashboard", protegerRuta, async (req, res) => {
                             TO_CHAR(c.fecha, 'DD/MM/YYYY') AS fecha,
                             TO_CHAR(c.hora, 'HH24:MI')     AS hora,
                             c.estado,
+                            CASE WHEN c.fecha < CURRENT_DATE
+                                 THEN 'vencida' ELSE c.estado END AS estado_visible,
                             e.nombre AS especialista
                        FROM citas c
                        JOIN usuarios u      ON u.id = c.usuario_id
@@ -57,12 +61,14 @@ router.get("/dashboard", protegerRuta, async (req, res) => {
                             TO_CHAR(c.hora, 'HH24:MI')     AS hora,
                             c.motivo,
                             c.estado,
+                            CASE WHEN c.fecha < CURRENT_DATE
+                                 THEN 'vencida' ELSE c.estado END AS estado_visible,
                             e.nombre AS especialista
                        FROM citas c
                        JOIN usuarios u      ON u.id = c.usuario_id
                        JOIN especialistas e ON e.id = c.especialista_id
                       WHERE c.estado IN ('pendiente', 'confirmada')
-                      ORDER BY c.fecha, c.hora
+                      ORDER BY (c.fecha < CURRENT_DATE), c.fecha, c.hora
                       LIMIT 40`
                 )).rows
             });
